@@ -15,5 +15,10 @@ namespace Stimmer.Services
         {
             _stemmer = stemmer;
         }
+
+        private bool S(string s)
+        {
+            return true;
+        }
     }
 }
