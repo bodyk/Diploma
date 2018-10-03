@@ -5,7 +5,7 @@ namespace Stimmer.Services
 {
     public class Among
     {
-        public Among(String s, int substring_i, int result)
+        public Among(string s, int substring_i, int result)
         {
             this.s = s.ToCharArray();
             this.substring_i = substring_i;
@@ -13,14 +13,14 @@ namespace Stimmer.Services
             this.method = null;
         }
 
-        public Among(String s, int substring_i, int result, String methodname, SnowballProgram programclass)
+        public Among(string s, int substring_i, int result, string methodname, SnowballProgram programclass)
         {
             this.s = s.ToCharArray();
             this.substring_i = substring_i;
             this.result = result;
             try
             {
-                this.method = programclass.getDeclaredMethod(methodname);
+                this.method = null; // programclass.getDeclaredMethod(methodname);
             }
             catch (Exception e)
             {

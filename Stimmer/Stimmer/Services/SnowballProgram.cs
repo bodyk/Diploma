@@ -7,7 +7,7 @@ namespace Stimmer.Services
     {
         protected SnowballProgram()
         {
-            current = new StringBuilder();
+            current = "";
             setCurrent("");
         }
 
@@ -16,7 +16,7 @@ namespace Stimmer.Services
         /**
          * Set the current string.
          */
-        public void setCurrent(String value)
+        public void setCurrent(string value)
         {
             current.Replace(current.ToString(), value);
             cursor = 0;
@@ -29,21 +29,21 @@ namespace Stimmer.Services
         /**
          * Get the current string.
          */
-        public String getCurrent()
+        public string getCurrent()
         {
-            String result = current.ToString();
+            string result = current.ToString();
             // Make a new StringBuffer.  If we reuse the old one, and a user of
             // the library keeps a reference to the buffer returned (for example,
             // by converting it to a String in a way which doesn't force a copy),
             // the buffer size will not decrease, and we will risk wasting a large
             // amount of memory.
             // Thanks to Wolfram Esser for spotting this problem.
-            current = new StringBuilder();
+            current = "";
             return result;
         }
 
         // current string
-        protected StringBuilder current;
+        protected string current;
 
         protected int cursor;
         protected int limit;
@@ -66,7 +66,7 @@ namespace Stimmer.Services
             if (cursor >= limit) return false;
             char ch = current[cursor];
             if (ch > max || ch < min) return false;
-            ch -= min;
+            ch = (char)(ch - min);
             if ((s[ch >> 3] & (0X1 << (ch & 0X7))) == 0) return false;
             cursor++;
             return true;
@@ -77,7 +77,7 @@ namespace Stimmer.Services
             if (cursor <= limit_backward) return false;
             char ch = current[cursor - 1];
             if (ch > max || ch < min) return false;
-            ch -= min;
+            ch = (char)(ch - min);
             if ((s[ch >> 3] & (0X1 << (ch & 0X7))) == 0) return false;
             cursor--;
             return true;
@@ -92,7 +92,7 @@ namespace Stimmer.Services
                 cursor++;
                 return true;
             }
-            ch -= min;
+            ch = (char)(ch - min);
             if ((s[ch >> 3] & (0X1 << (ch & 0X7))) == 0)
             {
                 cursor++;
@@ -110,7 +110,7 @@ namespace Stimmer.Services
                 cursor--;
                 return true;
             }
-            ch -= min;
+            ch = (char)(ch - min);
             if ((s[ch >> 3] & (0X1 << (ch & 0X7))) == 0)
             {
                 cursor--;
@@ -204,18 +204,13 @@ namespace Stimmer.Services
                 {
                     cursor = c + w.s.Length;
                     if (w.method == null) return w.result;
-                    bool res;
+                    bool res = false;
                     try
                     {
-                        Object resobj = w.method.Invoke(this);
-                        res = resobj.ToString().Equals("true");
+                        //Object resobj = w.method.Invoke(this);
+                        //res = resobj.ToString().Equals("true");
                     }
-                    catch (InvocationTargetException e)
-                    {
-                        res = false;
-                        // FIXME - debug message
-                    }
-                    catch (IllegalAccessException e)
+                    catch (Exception e)
                     {
                         res = false;
                         // FIXME - debug message
@@ -286,18 +281,13 @@ namespace Stimmer.Services
                     cursor = c - w.s.Length;
                     if (w.method == null) return w.result;
 
-                    bool res;
+                    bool res = false;
                     try
                     {
-                        Object resobj = w.method.Invoke(this);
-                        res = resobj.ToString().Equals("true");
+                        //Object resobj = w.method.Invoke(this);
+                        //res = resobj.ToString().Equals("true");
                     }
-                    catch (InvocationTargetException e)
-                    {
-                        res = false;
-                        // FIXME - debug message
-                    }
-                    catch (IllegalAccessException e)
+                    catch (Exception e)
                     {
                         res = false;
                         // FIXME - debug message
@@ -313,10 +303,10 @@ namespace Stimmer.Services
         /* to replace chars between c_bra and c_ket in current by the
          * chars in s.
          */
-        protected int replace_s(int c_bra, int c_ket, String s)
+        protected int replace_s(int c_bra, int c_ket, string s)
         {
             int adjustment = s.Length - (c_ket - c_bra);
-            current.replace(c_bra, c_ket, s);
+            current = current.Replace(current.Substring(c_bra, c_ket - c_bra), s);
             limit += adjustment;
             if (cursor >= c_ket) cursor += adjustment;
             else if (cursor > c_bra) cursor = c_bra;
@@ -340,15 +330,10 @@ namespace Stimmer.Services
             }
         }
 
-        protected void slice_from(String s)
+        protected void slice_from(string s)
         {
             slice_check();
             replace_s(bra, ket, s);
-        }
-
-        protected void slice_from(CharSequence s)
-        {
-            slice_from(s.toString());
         }
 
         protected void slice_del()
@@ -356,45 +341,25 @@ namespace Stimmer.Services
             slice_from("");
         }
 
-        protected void insert(int c_bra, int c_ket, String s)
+        protected void insert(int c_bra, int c_ket, string s)
         {
             int adjustment = replace_s(c_bra, c_ket, s);
             if (c_bra <= bra) bra += adjustment;
             if (c_bra <= ket) ket += adjustment;
         }
 
-        protected void insert(int c_bra, int c_ket, CharSequence s)
-        {
-            insert(c_bra, c_ket, s.toString());
-        }
-
         /* Copy the slice into the supplied StringBuffer */
-        protected StringBuilder slice_to(StringBuilder s)
+        protected string slice_to(string s)
         {
             slice_check();
             int len = ket - bra;
-            s.replace(0, s.length(), current.substring(bra, ket));
+            s = current.Substring(bra, ket - bra);
             return s;
         }
 
-        /* Copy the slice into the supplied StringBuilder */
-        protected StringBuilder slice_to(StringBuilder s)
+        protected string assign_to(string s)
         {
-            slice_check();
-            int len = ket - bra;
-            s.replace(0, s.Length, current.substring(bra, ket));
-            return s;
-        }
-
-        protected StringBuffer assign_to(StringBuffer s)
-        {
-            s.replace(0, s.length(), current.substring(0, limit));
-            return s;
-        }
-
-        protected StringBuilder assign_to(StringBuilder s)
-        {
-            s.replace(0, s.length(), current.substring(0, limit));
+            s = current.Substring(0, limit);
             return s;
         }
 
