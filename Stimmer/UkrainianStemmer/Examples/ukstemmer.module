@@ -1,0 +1,300 @@
+<?php
+/*
+ * Russian stemming algorith provided by Dr Martin Porter (snowball.tartarus.org):
+ * http://snowball.tartarus.org/algorithms/russian/stemmer.html
+ *
+ * Algorith implementation in PHP provided by Dmitry Koterov (dklab.ru):
+ * http://forum.dklab.ru/php/advises/HeuristicWithoutTheDictionaryExtractionOfARootFromRussianWord.html
+ *
+ * Algorith implementation adopted for Drupal by Algenon (4algenon@gmail.com)
+ *
+ * Version - 0.03
+ */
+
+/**
+ * Implementation of hook_search_preprocess
+ */
+
+define('WORD_CHARACTER', '_0-9a-zA-ZабвгдежзийклмнопрстуфхцчшщьюяіїєАБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЬЮЯІЇЄ');
+
+function ukstemmer_search_preprocess($text)
+{
+    // Split words from noise and remove apostrophes
+    $words = $text;
+    //  $words = strtr($words, 'ё','е');
+    
+    $words = preg_split('/([^a-zA-ZабвгдежзийклмнопрстуфхцчшщьюяіїєАБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЬЮЯІЇЄ]+)/', str_replace("'", '', $words), -1, PREG_SPLIT_DELIM_CAPTURE);
+    
+    $stemmer = new UkrainianStemmer();
+    // Process each word
+    $odd     = TRUE;
+    foreach ($words as $k => $word) {
+        if ($odd) {
+            $words[$k] = $stemmer->stem_word($word);
+        }
+        $odd = !$odd;
+    }
+    
+    // Put it all back together
+    return implode('', $words);
+}
+
+/**
+ * Implementation of hook_help().
+ */
+function ukstemmer_help($path, $arg)
+{
+    $output = '';
+    switch ($path) {
+        case 'admin/modules#description':
+            $output = '<p>' . t('Improves search of Ukrainian words by using the stemming algorithm for Ukrainian language.') . '</p>';
+            return $output;
+    }
+}
+
+
+function ukstemmer_menu()
+{
+    $items = array();
+    
+    $items['admin/config/search/ukstemmer'] = array(
+        'title' => 'Ukrainian Stemmer',
+        'description' => 'Apply stem caching while performing seacrh phrase stemming.',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array(
+            'ukstemmer_admin_settings'
+        ),
+        'access arguments' => array(
+            'configure ukrainian stemmer'
+        ),
+        'type' => MENU_NORMAL_ITEM
+    );
+    $items['ukstemmer_autocomplete']        = array(
+        'title' => 'Ukrainian Autocomplete',
+        'description' => 'Autocomplete handler for debug and api exporting.',
+        'page callback' => 'ukstemmer_autocomplete',
+        'access arguments' => array(
+            'access content'
+        ),
+        'type' => MENU_CALLBACK
+    );
+    return $items;
+    
+}
+
+function ukstemmer_autocomplete()
+{
+    global $multibyte;
+    $stemmer = new UkrainianStemmer();
+    $res     = array();
+    
+    
+    setlocale(LC_ALL, 'uk_UA.utf8');
+    //$s = 'Привет!';
+    //echo strtr ($s, $upper, $lower);
+    
+    $demo = drupal_get_query_parameters();
+    $res2 = explode(' ', $demo['word']);
+    $res  = drupal_strtolower($demo['word']);
+    //$res=$stemmer->stem_word($demo['word']);
+    //$res=ukstemmer_search_preprocess($demo);
+    //$demo=array('ukstemmer_autocomplete default echo');
+    
+    var_dump($demo['word']);
+    var_dump($res);
+    var_dump(mb_list_encodings());
+}
+
+function ukstemmer_admin_settings()
+{
+    drupal_set_title(t('Ukrainian Stemmer Config Page'));
+    $form['ukstemmer_stemcaching']                  = array(
+        '#type' => 'checkbox',
+        '#title' => t('Stem caching'),
+        '#default_value' => variable_get('ukstemmer_stemcaching', 0),
+        '#description' => t('Apply stem caching while performing seacrh phrase stemming.')
+    );
+    $form['advanced']                               = array(
+        '#type' => 'fieldset',
+        '#title' => t('Advanced'),
+        '#description' => t('Do not modify these options unless you know what you are doing!'),
+        '#collapsible' => TRUE,
+        '#collapsed' => FALSE
+    );
+    $form['advanced']['ukstemmer_vowel']            = array(
+        '#type' => 'textfield',
+        '#maxlength' => 256,
+        '#title' => t('<a href="http://uk.wikipedia.org/wiki/Голосний_звук">Vowel</a> for Ukrainian Stemmer'),
+        '#default_value' => variable_get('ukstemmer_vowel', '/аеиоуюяіїє/')
+    );
+    $form['advanced']['ukstemmer_perfectiveground'] = array(
+        '#type' => 'textfield',
+        '#maxlength' => 256,
+        '#title' => t('Perfective Ground for Ukrainian Stemmer'),
+        '#default_value' => variable_get('ukstemmer_perfectiveground', '/((ив|ивши|ившись|ыв|ывши|ывшись((?<=[ая])(в|вши|вшись)))$/') // Криво!
+    );
+    $form['advanced']['ukstemmer_reflexive']        = array(
+        '#type' => 'textfield',
+        '#maxlength' => 256,
+        '#title' => t('<a href="http://uk.wikipedia.org/wiki/Рефлексивне_дієслово">Reflexive Verb</a> for Ukrainian Stemmer'),
+        '#default_value' => variable_get('ukstemmer_reflexive', '/(с[яьи])$/')
+    );
+    $form['advanced']['ukstemmer_adjective']        = array(
+        '#type' => 'textfield',
+        '#maxlength' => 256,
+        '#title' => t('<a href="http://wapedia.mobi/uk/Прикметник">Adjective</a> for Ukrainian Stemmer'),
+        '#default_value' => variable_get('ukstemmer_adjective', '/(ее|ие|ые|ое|ими|ыми|ей|ий|ый|ой|ем|им|ым|ом|его|ого|ему|ому|их|ых|ую|юю|ая|яя|ою|ею)$/') // Криво!
+    );
+    $form['advanced']['ukstemmer_participle']       = array(
+        '#type' => 'textfield',
+        '#maxlength' => 256,
+        '#title' => t('<a href="http://uk.wikipedia.org/wiki/Дієприкметник">Participle</a> for Ukrainian Stemmer'),
+        '#default_value' => variable_get('ukstemmer_participle', '/((ивш|ывш|ующ)|((?<=[ая])(ем|нн|вш|ющ|щ)))$/') // Криво!
+    );
+    $form['advanced']['ukstemmer_verb']             = array(
+        '#type' => 'textfield',
+        '#maxlength' => 256,
+        '#title' => t('<a href="http://uk.wikipedia.org/wiki/Дієслово">Verb</a> for Ukrainian Stemmer'),
+        '#default_value' => variable_get('ukstemmer_verb', '/((ила|ыла|ена|ейте|уйте|ите|или|ыли|ей|уй|ил|ыл|им|ым|ен|ило|ыло|ено|ят|ует|уют|ит|ыт|ены|ить|ыть|ишь|ую|ю)|((?<=[ая])(ла|на|ете|йте|ли|й|л|ем|н|ло|но|ет|ют|ны|ть|ешь|нно)))$/') // Криво!
+    );
+    $form['advanced']['ukstemmer_noun']             = array(
+        '#type' => 'textfield',
+        '#maxlength' => 256,
+        '#title' => t('<a href="http://uk.wikipedia.org/wiki/Іменник">Noun</a> for Ukrainian Stemmer'),
+        '#default_value' => variable_get('ukstemmer_noun', '/(а|ев|ов|ие|ье|е|иями|ями|ами|еи|ии|и|ией|ей|ой|ий|й|иям|ям|ием|ем|ам|ом|о|у|ах|иях|ях|ы|ь|ию|ью|ю|ия|ья|я)$/') // Криво!
+    );
+    $form['advanced']['ukstemmer_rvre']             = array(
+        '#type' => 'textfield',
+        '#maxlength' => 256,
+        '#title' => t('RVRE for Ukrainian Stemmer'),
+        '#default_value' => variable_get('ukstemmer_rvre', '/^(.*?[аеиоуюяіїє])(.*)$/')
+    );
+    $form['advanced']['ukstemmer_derivational']     = array(
+        '#type' => 'textfield',
+        '#maxlength' => 256,
+        '#title' => t('Derivational for Ukrainian Stemmer'),
+        '#default_value' => variable_get('ukstemmer_derivational', '/[^аеиоуюяіїє][аеиоуюяіїє]+[^аеиоуюяіїє]+[аеиоуюяіїє].*(?<=о)сть?$/') // Криво!
+    );
+    
+    
+    $form = system_settings_form($form);
+    return $form;
+}
+
+/**
+ * Implementation of Russian Stemming algorithm.
+ * Modified by podarok to meet Ukrainian conditions.
+ */
+class UkrainianStemmer
+{
+    var $VERSION = "0.01";
+    var $Stem_Caching = 0;
+    var $Stem_Cache = array();
+    var $VOWEL = '/аеиоуюяіїє/';
+    /* http://uk.wikipedia.org/wiki/Голосний_звук */
+    // var $PERFECTIVEGROUND = '/((ив|ивши|ившись|ыв|ывши|ывшись((?<=[ая])(в|вши|вшись)))$/';
+    var $PERFECTIVEGROUND = '/((ив|ивши|ившись|ыв|ывши|ывшись((?<=[ая])(в|вши|вшись)))$/';
+    var $REFLEXIVE = '/(с[яьи])$/'; // http://uk.wikipedia.org/wiki/Рефлексивне_дієслово
+    var $ADJECTIVE = '/(ими|ій|ий|а|е|ова|ове|ів|є|їй|єє|еє|я|ім|ем|им|ім|их|іх|ою|йми|іми|у|ю|ого|ому|ої)$/'; //http://uk.wikipedia.org/wiki/Прикметник + http://wapedia.mobi/uk/Прикметник
+    var $PARTICIPLE = '/(ий|ого|ому|им|ім|а|ій|у|ою|ій|і|их|йми|их)$/'; //http://uk.wikipedia.org/wiki/Дієприкметник
+    var $VERB = '/(сь|ся|ив|ать|ять|у|ю|ав|али|учи|ячи|вши|ши|е|ме|ати|яти|є)$/'; //http://uk.wikipedia.org/wiki/Дієслово
+    var $NOUN = '/(а|ев|ов|е|ями|ами|еи|и|ей|ой|ий|й|иям|ям|ием|ем|ам|ом|о|у|ах|иях|ях|ы|ь|ию|ью|ю|ия|ья|я|і|ові|ї|ею|єю|ою|є|еві|ем|єм|ів|їв|\'ю)$/'; //http://uk.wikipedia.org/wiki/Іменник
+    var $RVRE = '/^(.*?[аеиоуюяіїє])(.*)$/';
+    var $DERIVATIONAL = '/[^аеиоуюяіїє][аеиоуюяіїє]+[^аеиоуюяіїє]+[аеиоуюяіїє].*(?<=о)сть?$/';
+    
+    function UkrainianStemmer()
+    {
+        $Stem_Caching = variable_get('ukstemmer_stemcaching', 0);
+        /*
+        $VOWEL = variable_get('ukstemmer_vowel', '/аеиоуюяіїє/');
+        $PERFECTIVEGROUND = variable_get('ukstemmer_perfectiveground', '/((ив|ивши|ившись|ыв|ывши|ывшись((?<=[ая])(в|вши|вшись)))$/');
+        $REFLEXIVE = variable_get('ukstemmer_reflexive', '/(с[яьи])$/');
+        $ADJECTIVE = variable_get('ukstemmer_adjective', '/(ее|ие|ые|ое|ими|ыми|ей|ий|ый|ой|ем|им|ым|ом|его|ого|ему|ому|их|ых|ую|юю|ая|яя|ою|ею)$/');
+        $PARTICIPLE = variable_get('ukstemmer_participle', '/((ивш|ывш|ующ)|((?<=[ая])(ем|нн|вш|ющ|щ)))$/');
+        $VERB = variable_get('ukstemmer_verb', '/((ила|ыла|ена|ейте|уйте|ите|или|ыли|ей|уй|ил|ыл|им|ым|ен|ило|ыло|ено|ят|ует|уют|ит|ыт|ены|ить|ыть|ишь|ую|ю)|((?<=[ая])(ла|на|ете|йте|ли|й|л|ем|н|ло|но|ет|ют|ны|ть|ешь|нно)))$/');
+        $NOUN = variable_get('ukstemmer_noun', '/(а|ев|ов|ие|ье|е|иями|ями|ами|еи|ии|и|ией|ей|ой|ий|й|иям|ям|ием|ем|ам|ом|о|у|ах|иях|ях|ы|ь|ию|ью|ю|ия|ья|я)$/');
+        $RVRE = variable_get('ukstemmer_rvre', '/^(.*?[аеиоуюяіїє])(.*)$/');
+        $DERIVATIONAL = variable_get('ukstemmer_derivational', '/[^аеиоуюяіїє][аеиоуюяіїє]+[^аеиоуюяіїє]+[аеиоуюяіїє].*(?<=о)сть?$/');
+        */
+    }
+    function s(&$s, $re, $to)
+    {
+        $orig = $s;
+        $s    = preg_replace($re, $to, $s);
+        return $orig !== $s;
+    }
+    
+    function m($s, $re)
+    {
+        return preg_match($re, $s);
+    }
+    
+    function stem_word($word)
+    {
+        //watchdog('ukstemmer', $word, NULL, $severity = WATCHDOG_NOTICE, $link = NULL);
+        $word = strtolower($word);
+        //        $word = strtr($word, 'ё', 'е');
+        # Check against cache of stemmed words
+        if ($this->Stem_Caching && isset($this->Stem_Cache[$word])) {
+            return $this->Stem_Cache[$word];
+        }
+        $stem = $word;
+        do {
+            if (!preg_match($this->RVRE, $word, $p))
+                break;
+            $start = $p[1];
+            $RV    = $p[2];
+            if (!$RV)
+                break;
+            
+            # Step 1
+            if (!$this->s($RV, $this->PERFECTIVEGROUND, '')) {
+                $this->s($RV, $this->REFLEXIVE, '');
+                
+                if ($this->s($RV, $this->ADJECTIVE, '')) {
+                    $this->s($RV, $this->PARTICIPLE, '');
+                } else {
+                    if (!$this->s($RV, $this->VERB, ''))
+                        $this->s($RV, $this->NOUN, '');
+                }
+            }
+            
+            # Step 2
+            $this->s($RV, '/и$/', '');
+            
+            # Step 3
+            if ($this->m($RV, $this->DERIVATIONAL))
+                $this->s($RV, '/ость?$/', '');
+            
+            # Step 4
+            if (!$this->s($RV, '/ь$/', '')) {
+                $this->s($RV, '/ейше?/', '');
+                $this->s($RV, '/нн$/', 'н');
+            }
+            
+            $stem = $start . $RV;
+        } while (false);
+        if ($this->Stem_Caching)
+            $this->Stem_Cache[$word] = $stem;
+        return $stem;
+    }
+    
+    function stem_caching($parm_ref)
+    {
+        $caching_level = @$parm_ref['-level'];
+        if ($caching_level) {
+            if (!$this->m($caching_level, '/^[012]$/')) {
+                die(__CLASS__ . "::stem_caching() - Legal values are '0','1' or '2'. '$caching_level' is not a legal value");
+            }
+            $this->Stem_Caching = $caching_level;
+        }
+        return $this->Stem_Caching;
+    }
+    
+    function clear_stem_cache()
+    {
+        $this->Stem_Cache = array();
+    }
+}
+
+?>

@@ -1,8 +1,8 @@
 ﻿using Ninject.Modules;
-using Stimmer.Interfaces;
-using Stimmer.Services;
+using UkrainianStemmer.Interfaces;
+using UkrainianStemmer.Services;
 
-namespace Stimmer.Infrastructure
+namespace UkrainianStemmer.Infrastructure
 {
     public class StemmerNinjectModule : NinjectModule
     {

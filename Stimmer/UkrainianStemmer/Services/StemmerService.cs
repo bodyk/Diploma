@@ -1,8 +1,8 @@
-﻿using Stimmer.Interfaces;
+﻿using UkrainianStemmer.Interfaces;
 
-namespace Stimmer.Services
+namespace UkrainianStemmer.Services
 {
-    public class StemmerService : IStemmerService
+    internal class StemmerService : IStemmerService
     {
         private readonly IStemmer _stemmer;
 

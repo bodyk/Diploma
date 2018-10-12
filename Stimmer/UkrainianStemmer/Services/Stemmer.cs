@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Stimmer.Interfaces;
+using UkrainianStemmer.Interfaces;
 
-namespace Stimmer.Services
+namespace UkrainianStemmer.Services
 {
     public class Stemmer : IStemmer
     {

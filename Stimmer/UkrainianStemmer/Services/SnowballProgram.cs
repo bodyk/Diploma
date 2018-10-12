@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 
-namespace Stimmer.Services
+namespace UkrainianStemmer.Services
 {
     public class SnowballProgram
     {
-        protected SnowballProgram()
+        public SnowballProgram()
         {
-            current = "";
-            setCurrent("");
+            current = new StringBuilder();
+            setCurrent(current);
         }
 
         static long serialVersionUID = 2016072500L;
@@ -16,9 +17,9 @@ namespace Stimmer.Services
         /**
          * Set the current string.
          */
-        public void setCurrent(string value)
+        public void setCurrent(StringBuilder value)
         {
-            current.Replace(current.ToString(), value);
+            current.Replace(current.ToString(), value.ToString());
             cursor = 0;
             limit = current.Length;
             limit_backward = 0;
@@ -38,12 +39,12 @@ namespace Stimmer.Services
             // the buffer size will not decrease, and we will risk wasting a large
             // amount of memory.
             // Thanks to Wolfram Esser for spotting this problem.
-            current = "";
+            current = new StringBuilder();
             return result;
         }
 
         // current string
-        protected string current;
+        protected StringBuilder current;
 
         protected int cursor;
         protected int limit;
@@ -306,7 +307,7 @@ namespace Stimmer.Services
         protected int replace_s(int c_bra, int c_ket, string s)
         {
             int adjustment = s.Length - (c_ket - c_bra);
-            current = current.Replace(current.Substring(c_bra, c_ket - c_bra), s);
+            current = current.Replace(current.ToString(c_bra, c_ket - c_bra), s);
             limit += adjustment;
             if (cursor >= c_ket) cursor += adjustment;
             else if (cursor > c_bra) cursor = c_bra;
@@ -353,13 +354,13 @@ namespace Stimmer.Services
         {
             slice_check();
             int len = ket - bra;
-            s = current.Substring(bra, ket - bra);
+            s = current.ToString(bra, ket - bra);
             return s;
         }
 
         protected string assign_to(string s)
         {
-            s = current.Substring(0, limit);
+            s = current.ToString(0, limit);
             return s;
         }
 
