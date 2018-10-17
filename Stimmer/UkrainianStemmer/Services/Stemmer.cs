@@ -3,7 +3,7 @@ using UkrainianStemmer.Interfaces;
 
 namespace UkrainianStemmer.Services
 {
-    public class Stemmer : IStemmer
+    public class Stemmer
     {
         public string Version { get; set; } = "0.01";
         public int StemCaching { get; set; }

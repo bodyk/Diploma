@@ -8,7 +8,6 @@ namespace UkrainianStemmer.Infrastructure
     {
         public override void Load()
         {
-            Bind<IStemmer>().To<Services.Stemmer>();
             Bind<IStemmerService>().To<StemmerService>();
         }
     }

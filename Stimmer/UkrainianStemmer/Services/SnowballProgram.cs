@@ -8,8 +8,8 @@ namespace UkrainianStemmer.Services
     {
         public SnowballProgram()
         {
-            current = new StringBuilder();
-            setCurrent(current);
+            current = new StringBuilder("");
+
         }
 
         static long serialVersionUID = 2016072500L;
@@ -19,7 +19,7 @@ namespace UkrainianStemmer.Services
          */
         public void setCurrent(StringBuilder value)
         {
-            current.Replace(current.ToString(), value.ToString());
+            current = value;
             cursor = 0;
             limit = current.Length;
             limit_backward = 0;

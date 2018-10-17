@@ -1,11 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using UkrainianStemmer.Interfaces;
 using UkrainianStemmer.Services;
 
 namespace UkrainianStemmer.StemmerLanguages
 {
-    public class UkrainianStemmer : SnowballProgram
+    public class UkrainianStemmer : StemmerOperations, IStemmer
     {
-        private readonly long serialVersionUID = 1L;
+        static long serialVersionUID = 2016072500L;
 
         private readonly List<Among> a_0 = new List<Among>
         {
@@ -388,8 +390,253 @@ namespace UkrainianStemmer.StemmerLanguages
             return true;
         }
 
-        public bool stem()
+        protected bool eq_s(string s)
         {
+            if (limit - cursor < s.Length) return false;
+            int i;
+            for (i = 0; i != s.Length; i++)
+            {
+                if (current[cursor + i] != s[i]) return false;
+            }
+            cursor += s.Length;
+            return true;
+        }
+
+        protected bool eq_s_b(string s)
+        {
+            if (cursor - limit_backward < s.Length) return false;
+            int i;
+            for (i = 0; i != s.Length; i++)
+            {
+                if (current[cursor - s.Length + i] != s[i]) return false;
+            }
+            cursor -= s.Length;
+            return true;
+        }
+
+        protected int find_among(List<Among> v)
+        {
+            int i = 0;
+            int j = v.Count;
+
+            int c = cursor;
+            int l = limit;
+
+            int common_i = 0;
+            int common_j = 0;
+
+            bool first_key_inspected = false;
+
+            while (true)
+            {
+                int k = i + ((j - i) >> 1);
+                int diff = 0;
+                int common = common_i < common_j ? common_i : common_j; // smaller
+                Among w = v[k];
+                int i2;
+                for (i2 = common; i2 < w.s.Length; i2++)
+                {
+                    if (c + common == l)
+                    {
+                        diff = -1;
+                        break;
+                    }
+                    diff = current[c + common] - w.s[i2];
+                    if (diff != 0) break;
+                    common++;
+                }
+                if (diff < 0)
+                {
+                    j = k;
+                    common_j = common;
+                }
+                else
+                {
+                    i = k;
+                    common_i = common;
+                }
+                if (j - i <= 1)
+                {
+                    if (i > 0) break; // v->s has been inspected
+                    if (j == i) break; // only one item in v
+
+                    // - but now we need to go round once more to get
+                    // v->s inspected. This looks messy, but is actually
+                    // the optimal approach.
+
+                    if (first_key_inspected) break;
+                    first_key_inspected = true;
+                }
+            }
+            while (true)
+            {
+                Among w = v[i];
+                if (common_i >= w.s.Length)
+                {
+                    cursor = c + w.s.Length;
+                    if (w.method == null) return w.result;
+                    bool res = false;
+                    try
+                    {
+                        //Object resobj = w.method.Invoke(this);
+                        //res = resobj.ToString().Equals("true");
+                    }
+                    catch (Exception e)
+                    {
+                        res = false;
+                        // FIXME - debug message
+                    }
+                    cursor = c + w.s.Length;
+                    if (res) return w.result;
+                }
+                i = w.substring_i;
+                if (i < 0) return 0;
+            }
+        }
+
+        // find_among_b is for backwards processing. Same comments apply
+        protected int find_among_b(List<Among> v)
+        {
+            int i = 0;
+            int j = v.Count;
+
+            int c = cursor;
+            int lb = limit_backward;
+
+            int common_i = 0;
+            int common_j = 0;
+
+            bool first_key_inspected = false;
+
+            while (true)
+            {
+                int k = i + ((j - i) >> 1);
+                int diff = 0;
+                int common = common_i < common_j ? common_i : common_j;
+                Among w = v[k];
+                int i2;
+                for (i2 = w.s.Length - 1 - common; i2 >= 0; i2--)
+                {
+                    if (c - common == lb)
+                    {
+                        diff = -1;
+                        break;
+                    }
+                    diff = current[c - 1 - common] - w.s[i2];
+                    if (diff != 0) break;
+                    common++;
+                }
+                if (diff < 0)
+                {
+                    j = k;
+                    common_j = common;
+                }
+                else
+                {
+                    i = k;
+                    common_i = common;
+                }
+                if (j - i <= 1)
+                {
+                    if (i > 0) break;
+                    if (j == i) break;
+                    if (first_key_inspected) break;
+                    first_key_inspected = true;
+                }
+            }
+            while (true)
+            {
+                Among w = v[i];
+                if (common_i >= w.s.Length)
+                {
+                    cursor = c - w.s.Length;
+                    if (w.method == null) return w.result;
+
+                    bool res = false;
+                    try
+                    {
+                        //Object resobj = w.method.Invoke(this);
+                        //res = resobj.ToString().Equals("true");
+                    }
+                    catch (Exception e)
+                    {
+                        res = false;
+                        // FIXME - debug message
+                    }
+                    cursor = c - w.s.Length;
+                    if (res) return w.result;
+                }
+                i = w.substring_i;
+                if (i < 0) return 0;
+            }
+        }
+
+        /* to replace chars between c_bra and c_ket in current by the
+         * chars in s.
+         */
+        protected int replace_s(int c_bra, int c_ket, string s)
+        {
+            int adjustment = s.Length - (c_ket - c_bra);
+            current = current.Replace(current.ToString(c_bra, c_ket - c_bra), s);
+            limit += adjustment;
+            if (cursor >= c_ket) cursor += adjustment;
+            else if (cursor > c_bra) cursor = c_bra;
+            return adjustment;
+        }
+
+        protected void slice_check()
+        {
+            if (bra < 0 ||
+                bra > ket ||
+                ket > limit ||
+                limit > current.Length)   // this line could be removed
+            {
+                Console.WriteLine("faulty slice operation");
+                // FIXME: report error somehow.
+                /*
+                    fprintf(stderr, "faulty slice operation:\n");
+                    debug(z, -1, 0);
+                    exit(1);
+                    */
+            }
+        }
+
+        protected void slice_from(string s)
+        {
+            slice_check();
+            replace_s(bra, ket, s);
+        }
+
+        protected void slice_del()
+        {
+            slice_from("");
+        }
+
+        protected void insert(int c_bra, int c_ket, string s)
+        {
+            int adjustment = replace_s(c_bra, c_ket, s);
+            if (c_bra <= bra) bra += adjustment;
+            if (c_bra <= ket) ket += adjustment;
+        }
+
+        /* Copy the slice into the supplied StringBuffer */
+        protected string slice_to(string s)
+        {
+            slice_check();
+            int len = ket - bra;
+            s = current.ToString(bra, ket - bra);
+            return s;
+        }
+
+        protected string assign_to(string s)
+        {
+            s = current.ToString(0, limit);
+            return s;
+        }
+
+        public string Stem(string s)
+        {
+            this.setCurrent(s);
             lab0: do
             {
                 int v_1 = cursor;
@@ -504,7 +751,7 @@ namespace UkrainianStemmer.StemmerLanguages
                 ;
             } while (false);
             lab0_end:
-            return true;
+            return this.getCurrent();
         }
-}
+    }
 }

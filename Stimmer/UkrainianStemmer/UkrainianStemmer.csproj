@@ -52,6 +52,7 @@
     <Compile Include="Services\SnowballProgram.cs" />
     <Compile Include="Services\Stemmer.cs" />
     <Compile Include="Services\StemmerService.cs" />
+    <Compile Include="StemmerLanguages\StemmerOperations.cs" />
     <Compile Include="StemmerLanguages\UkrainianStemmer.cs" />
   </ItemGroup>
   <ItemGroup>

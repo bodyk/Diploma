@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Text;
 using NUnit.Framework;
 using UkrainianStemmer.Services;
@@ -11,8 +13,8 @@ namespace Stemmer.Tests
     {
         private Dictionary<string, string> index;
 
-        string resultFile = "Data\\Results.txt";
-        string testDataFile = "Data\\TestUkrainian.txt";
+        readonly string resultFile = Resource.OutputFilePath;
+        readonly string testDataFile = Resource.InputTextFilePath;
 
         [Test]
         public void TestFromFile()
@@ -33,9 +35,6 @@ namespace Stemmer.Tests
                 char ch = (char)character;
                 if (char.IsWhiteSpace(ch))
                 {
-
-
-
                     var reworked = input.Replace("[^а-яА-ЯїЇґҐєЄіІ'-]", "");
 
                     if (reworked.Length > 0 && !char.IsWhiteSpace(reworked[0]))
@@ -62,7 +61,7 @@ namespace Stemmer.Tests
                 }
             }
 
-            output.Flush();
+            output.Close();
 
             List<string> rows = new List<string>();
             StreamReader read = new StreamReader(new FileStream(resultFile, FileMode.OpenOrCreate));
@@ -72,6 +71,7 @@ namespace Stemmer.Tests
                 rows.Add(s);
 
             rows.Sort();
+            read.Close();
 
             StreamWriter writer = new StreamWriter(resultFile);
             foreach (string cur in rows)
@@ -79,7 +79,6 @@ namespace Stemmer.Tests
 
             reader.Close();
             output.Close();
-            read.Close();
             writer.Close();
 
         }

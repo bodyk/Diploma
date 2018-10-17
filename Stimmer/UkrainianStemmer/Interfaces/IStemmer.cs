@@ -2,6 +2,6 @@
 {
     public interface IStemmer
     {
-        string Execute(string word, bool useStopWords);
+        string Stem(string s);
     }
 }
