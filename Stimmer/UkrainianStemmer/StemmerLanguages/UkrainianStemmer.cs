@@ -9,174 +9,182 @@ namespace UkrainianStemmer.StemmerLanguages
     {
         static long serialVersionUID = 2016072500L;
 
-        private readonly List<Among> a_0 = new List<Among>
+        // Інфінітив
+        // https://uk.wikipedia.org/wiki/%D0%86%D0%BD%D1%84%D1%96%D0%BD%D1%96%D1%82%D0%B8%D0%B2
+        private readonly List<Among> a_infinitive = new List<Among>
         {
-            new Among("\u0430\u0434\u0436\u0435", -1, -1),
-            new Among("\u0430\u0442\u043E\u043C", -1, -1),
-            new Among("\u0432\u0456\u0441\u044C", -1, -1),
-            new Among("\u0434\u0435\u0441\u044C", -1, -1),
-            new Among("\u0437\u0434\u043E\u0440\u043E\u0432'\u044F", -1, 1),
-            new Among("\u043A\u0440\u043E\u043A", -1, -1),
-            new Among("\u043A\u0440\u0456\u043C", -1, -1)
+            new Among("\u0430\u0434\u0436\u0435", -1, -1), // адже
+            new Among("\u0430\u0442\u043E\u043C", -1, -1), // атом
+            new Among("\u0432\u0456\u0441\u044C", -1, -1), // вісь
+            new Among("\u0434\u0435\u0441\u044C", -1, -1), // десь
+            new Among("\u0437\u0434\u043E\u0440\u043E\u0432'\u044F", -1, 1), // здоров'я
+            new Among("\u043A\u0440\u043E\u043A", -1, -1), // крок
+            new Among("\u043A\u0440\u0456\u043C", -1, -1) // крім
         };
 
-        private readonly List<Among> a_1 = new List<Among>
+        // Прикметник
+        //https://uk.wikipedia.org/wiki/%D0%9F%D1%80%D0%B8%D0%BA%D0%BC%D0%B5%D1%82%D0%BD%D0%B8%D0%BA
+        private readonly List<Among> a_adjective = new List<Among>
         {
-            new Among("\u043E\u0432\u0430", -1, 1),
-            new Among("\u043E\u0432\u0435", -1, 1),
-            new Among("\u0438\u043C\u0438", -1, 1),
-            new Among("\u0435\u0439", -1, 1),
-            new Among("\u0438\u0439", -1, 1),
-            new Among("\u043E\u0432\u0438\u0439", 4, 1),
-            new Among("\u0456\u0439", -1, 1),
-            new Among("\u043E\u0432\u0456\u0439", 6, 1),
-            new Among("\u0435\u043C", -1, 1),
-            new Among("\u0438\u043C", -1, 1),
-            new Among("\u043E\u0432\u0438\u043C", 9, 1),
-            new Among("\u043E\u043C", -1, 1),
-            new Among("\u0456\u043C", -1, 1),
-            new Among("\u043E\u0432\u043E", -1, 1),
-            new Among("\u043E\u0433\u043E", -1, 1),
-            new Among("\u043E\u0432\u043E\u0433\u043E", 14, 1),
-            new Among("\u0435\u043C\u0443", -1, 1),
-            new Among("\u043E\u043C\u0443", -1, 1),
-            new Among("\u043E\u0432\u043E\u043C\u0443", 17, 1),
-            new Among("\u0438\u0445", -1, 1),
-            new Among("\u043E\u0432\u0438\u0445", 19, 1),
-            new Among("\u0456\u0445", -1, 1),
-            new Among("\u0435\u044E", -1, 1),
-            new Among("\u043E\u044E", -1, 1),
-            new Among("\u043E\u0432\u043E\u044E", 23, 1),
-            new Among("\u0443\u044E", -1, 1),
-            new Among("\u044E\u044E", -1, 1),
-            new Among("\u0430\u044F", -1, 1),
-            new Among("\u043E\u0457", -1, 1),
-            new Among("\u043E\u0432\u043E\u0457", 28, 1)
+            new Among("\u043E\u0432\u0430", -1, 1), // ова
+            new Among("\u043E\u0432\u0435", -1, 1), // ове
+            new Among("\u0438\u043C\u0438", -1, 1), // ими
+            new Among("\u0435\u0439", -1, 1), // ей
+            new Among("\u0438\u0439", -1, 1), // ий
+            new Among("\u043E\u0432\u0438\u0439", 4, 1), // овий
+            new Among("\u0456\u0439", -1, 1), // ій
+            new Among("\u043E\u0432\u0456\u0439", 6, 1), // овій
+            new Among("\u0435\u043C", -1, 1), // ем
+            new Among("\u0438\u043C", -1, 1), // им
+            new Among("\u043E\u0432\u0438\u043C", 9, 1), // овим
+            new Among("\u043E\u043C", -1, 1), // ом
+            new Among("\u0456\u043C", -1, 1), // ім
+            new Among("\u043E\u0432\u043E", -1, 1), // ово
+            new Among("\u043E\u0433\u043E", -1, 1), // ого
+            new Among("\u043E\u0432\u043E\u0433\u043E", 14, 1), // ового
+            new Among("\u0435\u043C\u0443", -1, 1), // ему
+            new Among("\u043E\u043C\u0443", -1, 1), // ому
+            new Among("\u043E\u0432\u043E\u043C\u0443", 17, 1), // овому
+            new Among("\u0438\u0445", -1, 1), // их
+            new Among("\u043E\u0432\u0438\u0445", 19, 1), // ових
+            new Among("\u0456\u0445", -1, 1), // іх
+            new Among("\u0435\u044E", -1, 1), // ею
+            new Among("\u043E\u044E", -1, 1), // ою
+            new Among("\u043E\u0432\u043E\u044E", 23, 1), // овою
+            new Among("\u0443\u044E", -1, 1), // ую
+            new Among("\u044E\u044E", -1, 1), // юю
+            new Among("\u0430\u044F", -1, 1), // ая
+            new Among("\u043E\u0457", -1, 1), // ої
+            new Among("\u043E\u0432\u043E\u0457", 28, 1) // ової
         };
 
-        private readonly List<Among> a_2 = new List<Among>
+        // Постфікс
+        // https://uk.wikipedia.org/wiki/%D0%9F%D0%BE%D1%81%D1%82%D1%84%D1%96%D0%BA%D1%81
+        private readonly List<Among> a_postfix = new List<Among>
         {
-            new Among("\u0441\u044C", -1, 1),
-            new Among("\u0441\u044F", -1, 1)
+            new Among("\u0441\u044C", -1, 1), // сь
+            new Among("\u0441\u044F", -1, 1) // ся
         };
 
-        private readonly List<Among> a_3 = new List<Among>
+        // Дієслово
+        // https://uk.wikipedia.org/wiki/%D0%94%D1%96%D1%94%D1%81%D0%BB%D0%BE%D0%B2%D0%BE
+        private readonly List<Among> a_verb = new List<Among>
         {
-            new Among("\u0430\u043B\u0430", -1, 2),
-            new Among("\u0443\u0432\u0430\u043B\u0430", 0, 2),
-            new Among("\u0438\u043B\u0430", -1, 2),
-            new Among("\u0448\u043B\u0430", -1, 1),
-            new Among("\u0456\u043B\u0430", -1, 2),
-            new Among("\u0435\u043D\u0430", -1, 2),
-            new Among("\u0438\u0442\u0430", -1, 2),
-            new Among("\u0430\u0432", -1, 2),
-            new Among("\u0443\u0432\u0430\u0432", 7, 2),
-            new Among("\u0438\u0432", -1, 2),
-            new Among("\u0448\u043E\u0432", -1, 1),
-            new Among("\u0443\u0439\u0442\u0435", -1, 2),
-            new Among("\u0430\u043B\u0438", -1, 2),
-            new Among("\u0443\u0432\u0430\u043B\u0438", 12, 2),
-            new Among("\u0438\u043B\u0438", -1, 2),
-            new Among("\u0448\u043B\u0438", -1, 1),
-            new Among("\u0430\u043D\u0438\u043C\u0438", -1, 2),
-            new Among("\u0443\u0432\u0430\u0442\u0438", -1, 2),
-            new Among("\u0438\u0432\u0448\u0438", -1, 2),
-            new Among("\u0443\u0439", -1, 2),
-            new Among("\u0430\u043B\u043E", -1, 2),
-            new Among("\u0443\u0432\u0430\u043B\u043E", 20, 2),
-            new Among("\u0438\u043B\u043E", -1, 2),
-            new Among("\u0448\u043B\u043E", -1, 1),
-            new Among("\u0456\u043B\u043E", -1, 2),
-            new Among("\u0435\u043D\u043E", -1, 2),
-            new Among("\u0430\u043D\u0438\u0445", -1, 2),
-            new Among("\u0438\u0442\u044C", -1, 2),
-            new Among("\u0430\u044E\u0442\u044C", -1, 2),
-            new Among("\u0443\u044E\u0442\u044C", -1, 2),
-            new Among("\u0456\u044E\u0442\u044C", -1, 2),
-            new Among("\u0456\u0442\u044C", -1, 2),
-            new Among("\u0443\u0432\u0430\u043D\u043D\u044F", -1, 2),
-            new Among("\u0430\u0454", -1, 2),
-            new Among("\u0438\u0454", -1, 2),
-            new Among("\u0443\u0454", -1, 2),
-            new Among("\u044E\u0454", -1, 2),
-            new Among("\u044F\u0454", -1, 2),
-            new Among("\u0456\u0454", -1, 2),
-            new Among("\u0438\u043B\u0456", -1, 2),
-            new Among("\u0430\u043D\u0456", -1, 2)
+            new Among("\u0430\u043B\u0430", -1, 2), // ала
+            new Among("\u0443\u0432\u0430\u043B\u0430", 0, 2), // увала
+            new Among("\u0438\u043B\u0430", -1, 2), // ила
+            new Among("\u0448\u043B\u0430", -1, 1), // шла
+            new Among("\u0456\u043B\u0430", -1, 2), // іла
+            new Among("\u0435\u043D\u0430", -1, 2), // ена
+            new Among("\u0438\u0442\u0430", -1, 2), // ита
+            new Among("\u0430\u0432", -1, 2), // ав
+            new Among("\u0443\u0432\u0430\u0432", 7, 2), // ував
+            new Among("\u0438\u0432", -1, 2), // ив
+            new Among("\u0448\u043E\u0432", -1, 1), // шов
+            new Among("\u0443\u0439\u0442\u0435", -1, 2), // уйте
+            new Among("\u0430\u043B\u0438", -1, 2), // али
+            new Among("\u0443\u0432\u0430\u043B\u0438", 12, 2), // ували
+            new Among("\u0438\u043B\u0438", -1, 2), // или
+            new Among("\u0448\u043B\u0438", -1, 1), // шли
+            new Among("\u0430\u043D\u0438\u043C\u0438", -1, 2), // аними
+            new Among("\u0443\u0432\u0430\u0442\u0438", -1, 2), // увати
+            new Among("\u0438\u0432\u0448\u0438", -1, 2), // ивши
+            new Among("\u0443\u0439", -1, 2), // уй
+            new Among("\u0430\u043B\u043E", -1, 2), // ало
+            new Among("\u0443\u0432\u0430\u043B\u043E", 20, 2), // увало
+            new Among("\u0438\u043B\u043E", -1, 2), // ило
+            new Among("\u0448\u043B\u043E", -1, 1), // шло
+            new Among("\u0456\u043B\u043E", -1, 2), // іло
+            new Among("\u0435\u043D\u043E", -1, 2), // ено
+            new Among("\u0430\u043D\u0438\u0445", -1, 2), // аних
+            new Among("\u0438\u0442\u044C", -1, 2), // ить
+            new Among("\u0430\u044E\u0442\u044C", -1, 2), // ають
+            new Among("\u0443\u044E\u0442\u044C", -1, 2), // ують
+            new Among("\u0456\u044E\u0442\u044C", -1, 2), // іють
+            new Among("\u0456\u0442\u044C", -1, 2), // іть
+            new Among("\u0443\u0432\u0430\u043D\u043D\u044F", -1, 2), // ування
+            new Among("\u0430\u0454", -1, 2), // ає
+            new Among("\u0438\u0454", -1, 2), // иє
+            new Among("\u0443\u0454", -1, 2), // ує
+            new Among("\u044E\u0454", -1, 2), // ює
+            new Among("\u044F\u0454", -1, 2), // яє
+            new Among("\u0456\u0454", -1, 2), // іє
+            new Among("\u0438\u043B\u0456", -1, 2), // илі
+            new Among("\u0430\u043D\u0456", -1, 2) // ані
         };
 
-        private readonly List<Among> a_4 = new List<Among>
+        // Іменник
+        // https://uk.wikipedia.org/wiki/%D0%86%D0%BC%D0%B5%D0%BD%D0%BD%D0%B8%D0%BA
+        private readonly List<Among> a_noun = new List<Among>
         {
-            new Among("\u0430", -1, 3),
-            new Among("\u044F\u0442\u0430", 0, 1),
-            new Among("\u043E\u0432", -1, 3),
-            new Among("\u0456\u0432", -1, 3),
-            new Among("\u0457\u0432", -1, 3),
-            new Among("\u043E\u0457\u0432", 4, 3),
-            new Among("\u0435", -1, 3),
-            new Among("\u0438", -1, 3),
-            new Among("\u0430\u043C\u0438", 7, 3),
-            new Among("\u044F\u0442\u0430\u043C\u0438", 8, 1),
-            new Among("\u044F\u043C\u0438", 7, 3),
-            new Among("\u0456\u044F\u043C\u0438", 10, 3),
-            new Among("\u0439", -1, 3),
-            new Among("\u0435\u0439", 12, 3),
-            new Among("\u043E\u0439", 12, 3),
-            new Among("\u0456\u0439", 12, 3),
-            new Among("\u043E\u043A", -1, 2),
-            new Among("\u0438\u043B", -1, 3),
-            new Among("\u0456\u043B", -1, 3),
-            new Among("\u0430\u043C", -1, 3),
-            new Among("\u044F\u0442\u0430\u043C", 19, 1),
-            new Among("\u0435\u043C", -1, 3),
-            new Among("\u043E\u043C", -1, 3),
-            new Among("\u044F\u043C", -1, 3),
-            new Among("\u0456\u044F\u043C", 23, 3),
-            new Among("\u043E\u0454\u043C", -1, 3),
-            new Among("\u0435\u043D", -1, 3),
-            new Among("\u043E", -1, 3),
-            new Among("\u044F\u0442", -1, 3),
-            new Among("\u0443", -1, 3),
-            new Among("\u0430\u0445", -1, 3),
-            new Among("\u044F\u0445", -1, 3),
-            new Among("\u043E\u044F\u0445", 31, 3),
-            new Among("\u0456\u044F\u0445", 31, 3),
-            new Among("\u044C", -1, 3),
-            new Among("\u044E", -1, 3),
-            new Among("\u0443\u044E", 35, 3),
-            new Among("\u0456\u0454\u044E", 35, 3),
-            new Among("\u0456\u044E", 35, 3),
-            new Among("\u044F", -1, 3),
-            new Among("\u043E\u044F", 39, 3),
-            new Among("\u0456\u044F", 39, 3),
-            new Among("\u0456", -1, 3),
-            new Among("\u043E\u0432\u0456", 42, 3),
-            new Among("\u0435\u0457", -1, 3),
-            new Among("\u0456\u0457", -1, 3)
+            new Among("\u0430", -1, 3), // а
+            new Among("\u044F\u0442\u0430", 0, 1), // ята
+            new Among("\u043E\u0432", -1, 3), // ов
+            new Among("\u0456\u0432", -1, 3), // ів
+            new Among("\u0457\u0432", -1, 3), // їв
+            new Among("\u043E\u0457\u0432", 4, 3), // оїв
+            new Among("\u0435", -1, 3), // е
+            new Among("\u0438", -1, 3), // и
+            new Among("\u0430\u043C\u0438", 7, 3), // ами
+            new Among("\u044F\u0442\u0430\u043C\u0438", 8, 1), // ятами
+            new Among("\u044F\u043C\u0438", 7, 3), // ями
+            new Among("\u0456\u044F\u043C\u0438", 10, 3), // іями
+            new Among("\u0439", -1, 3), // й
+            new Among("\u0435\u0439", 12, 3), // ей
+            new Among("\u043E\u0439", 12, 3), // ой
+            new Among("\u0456\u0439", 12, 3), // ій
+            new Among("\u043E\u043A", -1, 2), // ок
+            new Among("\u0438\u043B", -1, 3), // ил
+            new Among("\u0456\u043B", -1, 3), // іл
+            new Among("\u0430\u043C", -1, 3), // ам
+            new Among("\u044F\u0442\u0430\u043C", 19, 1), // ятам
+            new Among("\u0435\u043C", -1, 3), // ем
+            new Among("\u043E\u043C", -1, 3), // ом
+            new Among("\u044F\u043C", -1, 3), // ям
+            new Among("\u0456\u044F\u043C", 23, 3), // іям
+            new Among("\u043E\u0454\u043C", -1, 3), // оєм
+            new Among("\u0435\u043D", -1, 3), // ен
+            new Among("\u043E", -1, 3), // о
+            new Among("\u044F\u0442", -1, 3), // ят
+            new Among("\u0443", -1, 3), // у
+            new Among("\u0430\u0445", -1, 3), // ах
+            new Among("\u044F\u0445", -1, 3), // ях
+            new Among("\u043E\u044F\u0445", 31, 3), // оях
+            new Among("\u0456\u044F\u0445", 31, 3), // іях
+            new Among("\u044C", -1, 3), // ь
+            new Among("\u044E", -1, 3), // ю
+            new Among("\u0443\u044E", 35, 3), // ую
+            new Among("\u0456\u0454\u044E", 35, 3), // ією
+            new Among("\u0456\u044E", 35, 3), // ію
+            new Among("\u044F", -1, 3), // я
+            new Among("\u043E\u044F", 39, 3), // оя
+            new Among("\u0456\u044F", 39, 3), // ія
+            new Among("\u0456", -1, 3), // і
+            new Among("\u043E\u0432\u0456", 42, 3), // ові
+            new Among("\u0435\u0457", -1, 3), // еї
+            new Among("\u0456\u0457", -1, 3) // ії
         };
 
         private readonly List<Among> a_5 = new List<Among>
         {
             new Among("'", -1, 3),
-            new Among("\u0441\u044C\u043A", -1, 3),
-            new Among("\u0456\u0439\u0441\u044C\u043A", 1, 3),
-            new Among("\u043D", -1, 1),
-            new Among("\u0430\u043D", 3, 3),
-            new Among("\u0435\u043D", 3, 3),
-            new Among("\u0456\u0447\u043D", 3, 3),
-            new Among("\u044C\u043D", 3, 3),
-            new Among("\u0442", -1, 2),
-            new Among("\u0438\u0442", 8, 3),
-            new Among("\u043E\u0441\u0442", 8, 4),
-            new Among("\u044E\u044E\u0442", 8, 3),
-            new Among("\u0430\u0454\u0442", 8, 3),
-            new Among("\u0443\u0454\u0442", 8, 3),
-            new Among("\u044E\u0454\u0442", 8, 3),
-            new Among("\u044F\u0454\u0442", 8, 3),
-            new Among("\u044C", -1, 3)
+            new Among("\u0441\u044C\u043A", -1, 3), // ськ
+            new Among("\u0456\u0439\u0441\u044C\u043A", 1, 3), // ійськ
+            new Among("\u043D", -1, 1), // н
+            new Among("\u0430\u043D", 3, 3), // ан
+            new Among("\u0435\u043D", 3, 3), // ен
+            new Among("\u0456\u0447\u043D", 3, 3), // ічн
+            new Among("\u044C\u043D", 3, 3), // ьн
+            new Among("\u0442", -1, 2), // т
+            new Among("\u0438\u0442", 8, 3), // ит
+            new Among("\u043E\u0441\u0442", 8, 4), // ост
+            new Among("\u044E\u044E\u0442", 8, 3), // юют
+            new Among("\u0430\u0454\u0442", 8, 3), // аєт
+            new Among("\u0443\u0454\u0442", 8, 3), // уєт
+            new Among("\u044E\u0454\u0442", 8, 3), // юєт
+            new Among("\u044F\u0454\u0442", 8, 3), // яєт
+            new Among("\u044C", -1, 3) // ь
         };
-
-
 
         private bool r_exception1()
         {
@@ -185,7 +193,7 @@ namespace UkrainianStemmer.StemmerLanguages
             // [, line 52
             bra = cursor;
             // substring, line 52
-            among_var = find_among(a_0);
+            among_var = find_among(a_infinitive);
             if (among_var == 0)
             {
                 return false;
@@ -204,7 +212,7 @@ namespace UkrainianStemmer.StemmerLanguages
                 case 1:
                     // (, line 54
                     // <-, line 54
-                    slice_from("\u0437\u0434\u043E\u0440");
+                    slice_from("\u0437\u0434\u043E\u0440"); //здор
                     break;
             }
             return true;
@@ -217,7 +225,7 @@ namespace UkrainianStemmer.StemmerLanguages
             // [, line 72
             ket = cursor;
             // substring, line 72
-            among_var = find_among_b(a_1);
+            among_var = find_among_b(a_adjective);
             if (among_var == 0)
             {
                 return false;
@@ -244,7 +252,7 @@ namespace UkrainianStemmer.StemmerLanguages
             // [, line 88
             ket = cursor;
             // substring, line 88
-            among_var = find_among_b(a_2);
+            among_var = find_among_b(a_postfix);
             if (among_var == 0)
             {
                 return false;
@@ -271,7 +279,7 @@ namespace UkrainianStemmer.StemmerLanguages
             // [, line 96
             ket = cursor;
             // substring, line 96
-            among_var = find_among_b(a_3);
+            among_var = find_among_b(a_verb);
             if (among_var == 0)
             {
                 return false;
@@ -285,7 +293,7 @@ namespace UkrainianStemmer.StemmerLanguages
                 case 1:
                     // (, line 97
                     // <-, line 97
-                    slice_from("\u0442");
+                    slice_from("\u0442"); // т
                     break;
                 case 2:
                     // (, line 108
@@ -303,7 +311,7 @@ namespace UkrainianStemmer.StemmerLanguages
             // [, line 113
             ket = cursor;
             // substring, line 113
-            among_var = find_among_b(a_4);
+            among_var = find_among_b(a_noun);
             if (among_var == 0)
             {
                 return false;
@@ -317,7 +325,7 @@ namespace UkrainianStemmer.StemmerLanguages
                 case 1:
                     // (, line 115
                     // literal, line 115
-                    if (!(eq_s_b("\u043D")))
+                    if (!(eq_s_b("\u043D"))) // н
                     {
                         return false;
                     }
@@ -327,7 +335,7 @@ namespace UkrainianStemmer.StemmerLanguages
                 case 2:
                     // (, line 116
                     // <-, line 116
-                    slice_from("\u043A");
+                    slice_from("\u043A"); // к
                     break;
                 case 3:
                     // (, line 127
@@ -359,7 +367,7 @@ namespace UkrainianStemmer.StemmerLanguages
                 case 1:
                     // (, line 135
                     // literal, line 135
-                    if (!(eq_s_b("\u043D")))
+                    if (!(eq_s_b("\u043D"))) // н
                     {
                         return false;
                     }
@@ -369,7 +377,7 @@ namespace UkrainianStemmer.StemmerLanguages
                 case 2:
                     // (, line 137
                     // literal, line 137
-                    if (!(eq_s_b("\u0442")))
+                    if (!(eq_s_b("\u0442"))) // т
                     {
                         return false;
                     }
@@ -384,7 +392,7 @@ namespace UkrainianStemmer.StemmerLanguages
                 case 4:
                     // (, line 147
                     // <-, line 147
-                    slice_from("\u0456\u0441\u0442");
+                    slice_from("\u0456\u0441\u0442"); // іст
                     break;
             }
             return true;
