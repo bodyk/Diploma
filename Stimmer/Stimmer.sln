@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UkrainianStemmer", "Ukraini
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VerbariumVocabulary", "mastersproject\VerbariumVocabulary\VerbariumVocabulary.csproj", "{62512E2C-A077-4447-8F4D-AF94C1092D4F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Verbarium.DAL", "Verbarium.DAL\Verbarium.DAL.csproj", "{E408C9C9-2AF4-42D3-856D-838D6CD9FF5E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Verbarium.BLL", "Verbarium.BLL\Verbarium.BLL.csproj", "{9A819F9B-15CD-47F9-BAA8-F36EEE0E4AE9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,14 @@ Global
 		{62512E2C-A077-4447-8F4D-AF94C1092D4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{62512E2C-A077-4447-8F4D-AF94C1092D4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{62512E2C-A077-4447-8F4D-AF94C1092D4F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E408C9C9-2AF4-42D3-856D-838D6CD9FF5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E408C9C9-2AF4-42D3-856D-838D6CD9FF5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E408C9C9-2AF4-42D3-856D-838D6CD9FF5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E408C9C9-2AF4-42D3-856D-838D6CD9FF5E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A819F9B-15CD-47F9-BAA8-F36EEE0E4AE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A819F9B-15CD-47F9-BAA8-F36EEE0E4AE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A819F9B-15CD-47F9-BAA8-F36EEE0E4AE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A819F9B-15CD-47F9-BAA8-F36EEE0E4AE9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
