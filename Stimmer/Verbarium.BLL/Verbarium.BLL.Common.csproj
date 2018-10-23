@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Ninject, Version=3.3.4.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ninject.3.3.4\lib\net45\Ninject.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -47,15 +50,20 @@
     <Compile Include="Extensions\Mapper\ClassifierMapper.cs" />
     <Compile Include="Extensions\Mapper\QuoteMapper.cs" />
     <Compile Include="Extensions\Mapper\WordMapper.cs" />
-    <Compile Include="Interfaces\IClassifierService.cs" />
-    <Compile Include="Interfaces\IQuoteService.cs" />
-    <Compile Include="Interfaces\IWordService.cs" />
+    <Compile Include="Interfaces\IClassifierServiceCrud.cs" />
+    <Compile Include="Interfaces\IDtoEntity.cs" />
+    <Compile Include="Interfaces\IGenericService.cs" />
+    <Compile Include="Interfaces\IQuoteServiceCrud.cs" />
+    <Compile Include="Interfaces\IWordServiceCrud.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\ClassifierService.cs" />
-    <Compile Include="Services\QuoteService.cs" />
-    <Compile Include="Services\WordService.cs" />
+    <Compile Include="Services\Base\BaseServiceCrud.cs" />
+    <Compile Include="Services\ClassifierServiceCrud.cs" />
+    <Compile Include="Services\QuoteServiceCrud.cs" />
+    <Compile Include="Services\WordServiceCrud.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Verbarium.DAL\Verbarium.DAL.csproj">
       <Project>{E408C9C9-2AF4-42D3-856D-838D6CD9FF5E}</Project>

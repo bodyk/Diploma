@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Verbarium.DAL.Interfaces;
 
 namespace Verbarium.DAL.Models
 {
-    public class Quote
+    public class Quote : IEntity
     {
         public int Id { get; set; }
 

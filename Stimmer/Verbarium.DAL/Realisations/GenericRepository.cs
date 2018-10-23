@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Verbarium.DAL.Interfaces;
 
 namespace Verbarium.DAL.Realisations
 {
-    public class GenericRepository<T> : IGenericRepository<T> where T : class
+    public class GenericRepository<T> : IGenericRepository<T> 
+        where T : class, IEntity
     {
         protected readonly DbContext _context;
         private IDbSet<T> _entities;
@@ -23,6 +23,11 @@ namespace Verbarium.DAL.Realisations
         public async Task<IEnumerable<T>> GetAllAsync()
         {
             return await Entities.ToListAsync();
+        }
+
+        public Task<T> GetByIdAsync(int id)
+        {
+            return Entities.SingleOrDefaultAsync(i => i.Id == id);
         }
 
         public virtual T Create(T item)
@@ -43,6 +48,28 @@ namespace Verbarium.DAL.Realisations
             }
 
             _context.Entry(item).State = EntityState.Modified;
+        }
+
+        public void Delete(int id)
+        {
+            var entity = GetByIdAsync(id);
+            if (entity == null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
+            Entities.Remove(entity.Result);
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            var entity = await GetByIdAsync(id);
+            if (entity == null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
+            Entities.Remove(entity);
         }
 
         public IQueryable<T> Query => Entities;

@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using Verbarium.BLL.DTOs;
+using Verbarium.BLL.Interfaces;
 
-namespace Verbarium.BLL.Interfaces
+namespace Verbarium.BLL.Desktop.Interfaces
 {
-    public interface IClassifierService
+    public interface IClassifierService : IClassifierServiceCrud
     {
         List<ClassifierDto> GetAllClassifiers(int rootId = -1);
         List<ClassifierDto> GetRootClassifiers();

@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using Verbarium.BLL.DTOs;
+using Verbarium.BLL.Interfaces;
 
-namespace Verbarium.BLL.Interfaces
+namespace Verbarium.BLL.Desktop.Interfaces
 {
-    public interface IWordService
+    public interface IWordService : IWordServiceCrud
     {
         List<WordDto> FindWords(List<int> classifiersIds, string searchCondition);
         List<WordDto> GetLastWords();

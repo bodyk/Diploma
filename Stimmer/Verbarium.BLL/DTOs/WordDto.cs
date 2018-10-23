@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
+using Verbarium.BLL.Interfaces;
 
 namespace Verbarium.BLL.DTOs
 {
-    public class WordDto
+    public class WordDto : IDtoEntity
     {
         public int Id { get; set; }
         

@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using Verbarium.BLL.Interfaces;
 
 namespace Verbarium.BLL.DTOs
 {
-    public class ClassifierDto
+    public class ClassifierDto : IDtoEntity
     {
         public int Id { get; set; }
         public string Name { get; set; }

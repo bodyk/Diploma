@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using Verbarium.DAL.Interfaces;
 
 namespace Verbarium.DAL.Models
 {
-    public class Classifier
+    public class Classifier : IEntity
     {
         public int Id { get; set; }
 

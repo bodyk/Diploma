@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
+using Verbarium.BLL.Desktop.Interfaces;
 using Verbarium.BLL.DTOs;
-using Verbarium.BLL.Interfaces;
+using Verbarium.BLL.Services;
+using Verbarium.DAL.Interfaces;
 
-namespace Verbarium.BLL.Services
+namespace Verbarium.BLL.Desktop.Services
 {
-    public class WordService : IWordService
+    public class WordService : WordServiceCrud, IWordService
     {
         public List<WordDto> FindWords(List<int> classifiersIds, string searchCondition)
         {
@@ -64,6 +66,10 @@ namespace Verbarium.BLL.Services
         public void DeleteAllWords()
         {
             throw new System.NotImplementedException();
+        }
+
+        public WordService(IUnitOfWork unitOfWork) : base(unitOfWork)
+        {
         }
     }
 }

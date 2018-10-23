@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
+using Verbarium.BLL.Desktop.Interfaces;
 using Verbarium.BLL.DTOs;
-using Verbarium.BLL.Interfaces;
+using Verbarium.BLL.Services;
+using Verbarium.DAL.Interfaces;
 
-namespace Verbarium.BLL.Services
+namespace Verbarium.BLL.Desktop.Services
 {
-    public class ClassifierService : IClassifierService
+    public class ClassifierService : ClassifierServiceCrud, IClassifierService
     {
         public List<ClassifierDto> GetAllClassifiers(int rootId = -1)
         {
@@ -44,6 +46,10 @@ namespace Verbarium.BLL.Services
         public void DeleteAllClassifiers()
         {
             throw new System.NotImplementedException();
+        }
+
+        public ClassifierService(IUnitOfWork unitOfWork) : base(unitOfWork)
+        {
         }
     }
 }

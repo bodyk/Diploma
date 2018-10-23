@@ -1,6 +1,8 @@
+using Verbarium.BLL.Interfaces;
+
 namespace Verbarium.BLL.DTOs
 {
-    public class QuoteDto
+    public class QuoteDto : IDtoEntity
     {
         public int Id { get; set; }
 
