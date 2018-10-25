@@ -1,23 +1,13 @@
 ﻿using System.Collections.Generic;
+using System.Data.Entity;
 using Verbarium.DAL.Models;
 
-namespace Verbarium.DAL.Migrations
+namespace Verbarium.DAL.Context
 {
-    using System.Data.Entity.Migrations;
-
-    public sealed class Configuration : DbMigrationsConfiguration<Verbarium.DAL.Context.VerbariumContext>
+    public class ClassifierDbInitializer : DropCreateDatabaseIfModelChanges<VerbariumContext>
     {
-        public Configuration()
+        protected override void Seed(VerbariumContext context)
         {
-            AutomaticMigrationsEnabled = false;
-        }
-
-        protected override void Seed(Verbarium.DAL.Context.VerbariumContext context)
-        {
-            //  This method will be called after migrating to the latest version.
-
-            //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
-            //  to avoid creating duplicate seed data.
             var defaultClassifiers = new List<Classifier>
             {
                 new Classifier
@@ -65,7 +55,7 @@ namespace Verbarium.DAL.Migrations
             };
 
             context.Classifiers.AddRange(defaultClassifiers);
-            context.SaveChanges();
+
             base.Seed(context);
         }
     }

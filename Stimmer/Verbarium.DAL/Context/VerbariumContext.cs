@@ -8,7 +8,7 @@ namespace Verbarium.DAL.Context
         public VerbariumContext()
             : base("name=VerbariumContext")
         {
-
+            Database.SetInitializer(new ClassifierDbInitializer());
         }
 
         public virtual DbSet<Classifier> Classifiers { get; set; }

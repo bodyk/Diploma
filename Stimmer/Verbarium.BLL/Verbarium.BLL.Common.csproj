@@ -50,6 +50,7 @@
     <Compile Include="Extensions\Mapper\ClassifierMapper.cs" />
     <Compile Include="Extensions\Mapper\QuoteMapper.cs" />
     <Compile Include="Extensions\Mapper\WordMapper.cs" />
+    <Compile Include="Infrastructure\BllCommonModule.cs" />
     <Compile Include="Interfaces\IClassifierServiceCrud.cs" />
     <Compile Include="Interfaces\IDtoEntity.cs" />
     <Compile Include="Interfaces\IGenericService.cs" />
@@ -62,6 +63,7 @@
     <Compile Include="Services\WordServiceCrud.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

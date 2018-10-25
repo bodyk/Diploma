@@ -15,5 +15,7 @@ namespace Verbarium.DAL.Models
         public string Description { get; set; }
 
         public virtual List<Classifier> Classifiers { get; set; }
+
+        public virtual List<Word> Words { get; set; }
     }
 }

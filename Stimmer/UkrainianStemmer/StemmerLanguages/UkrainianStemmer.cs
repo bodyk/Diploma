@@ -7,11 +7,11 @@ namespace UkrainianStemmer.StemmerLanguages
 {
     public class UkrainianStemmer : StemmerOperations, IStemmer
     {
-        static long serialVersionUID = 2016072500L;
+        static long _serialVersionUid = 2016072500L;
 
         // Інфінітив
         // https://uk.wikipedia.org/wiki/%D0%86%D0%BD%D1%84%D1%96%D0%BD%D1%96%D1%82%D0%B8%D0%B2
-        private readonly List<Among> a_infinitive = new List<Among>
+        private readonly List<Among> _aInfinitive = new List<Among>
         {
             new Among("\u0430\u0434\u0436\u0435", -1, -1), // адже
             new Among("\u0430\u0442\u043E\u043C", -1, -1), // атом
@@ -24,7 +24,7 @@ namespace UkrainianStemmer.StemmerLanguages
 
         // Прикметник
         //https://uk.wikipedia.org/wiki/%D0%9F%D1%80%D0%B8%D0%BA%D0%BC%D0%B5%D1%82%D0%BD%D0%B8%D0%BA
-        private readonly List<Among> a_adjective = new List<Among>
+        private readonly List<Among> _aAdjective = new List<Among>
         {
             new Among("\u043E\u0432\u0430", -1, 1), // ова
             new Among("\u043E\u0432\u0435", -1, 1), // ове
@@ -60,7 +60,7 @@ namespace UkrainianStemmer.StemmerLanguages
 
         // Постфікс
         // https://uk.wikipedia.org/wiki/%D0%9F%D0%BE%D1%81%D1%82%D1%84%D1%96%D0%BA%D1%81
-        private readonly List<Among> a_postfix = new List<Among>
+        private readonly List<Among> _aPostfix = new List<Among>
         {
             new Among("\u0441\u044C", -1, 1), // сь
             new Among("\u0441\u044F", -1, 1) // ся
@@ -68,7 +68,7 @@ namespace UkrainianStemmer.StemmerLanguages
 
         // Дієслово
         // https://uk.wikipedia.org/wiki/%D0%94%D1%96%D1%94%D1%81%D0%BB%D0%BE%D0%B2%D0%BE
-        private readonly List<Among> a_verb = new List<Among>
+        private readonly List<Among> _aVerb = new List<Among>
         {
             new Among("\u0430\u043B\u0430", -1, 2), // ала
             new Among("\u0443\u0432\u0430\u043B\u0430", 0, 2), // увала
@@ -115,7 +115,7 @@ namespace UkrainianStemmer.StemmerLanguages
 
         // Іменник
         // https://uk.wikipedia.org/wiki/%D0%86%D0%BC%D0%B5%D0%BD%D0%BD%D0%B8%D0%BA
-        private readonly List<Among> a_noun = new List<Among>
+        private readonly List<Among> _aNoun = new List<Among>
         {
             new Among("\u0430", -1, 3), // а
             new Among("\u044F\u0442\u0430", 0, 1), // ята
@@ -165,7 +165,7 @@ namespace UkrainianStemmer.StemmerLanguages
             new Among("\u0456\u0457", -1, 3) // ії
         };
 
-        private readonly List<Among> a_5 = new List<Among>
+        private readonly List<Among> _a5 = new List<Among>
         {
             new Among("'", -1, 3),
             new Among("\u0441\u044C\u043A", -1, 3), // ськ
@@ -188,24 +188,24 @@ namespace UkrainianStemmer.StemmerLanguages
 
         private bool r_exception1()
         {
-            int among_var;
+            int amongVar;
             // (, line 50
             // [, line 52
-            bra = cursor;
+            Bra = Cursor;
             // substring, line 52
-            among_var = find_among(a_infinitive);
-            if (among_var == 0)
+            amongVar = find_among(_aInfinitive);
+            if (amongVar == 0)
             {
                 return false;
             }
             // ], line 52
-            ket = cursor;
+            Ket = Cursor;
             // atlimit, line 52
-            if (cursor < limit)
+            if (Cursor < Limit)
             {
                 return false;
             }
-            switch (among_var)
+            switch (amongVar)
             {
                 case 0:
                     return false;
@@ -220,19 +220,19 @@ namespace UkrainianStemmer.StemmerLanguages
 
         private bool r_adjective()
         {
-            int among_var;
+            int amongVar;
             // (, line 70
             // [, line 72
-            ket = cursor;
+            Ket = Cursor;
             // substring, line 72
-            among_var = find_among_b(a_adjective);
-            if (among_var == 0)
+            amongVar = find_among_b(_aAdjective);
+            if (amongVar == 0)
             {
                 return false;
             }
             // ], line 72
-            bra = cursor;
-            switch (among_var)
+            Bra = Cursor;
+            switch (amongVar)
             {
                 case 0:
                     return false;
@@ -247,19 +247,19 @@ namespace UkrainianStemmer.StemmerLanguages
 
         private bool r_postfix()
         {
-            int among_var;
+            int amongVar;
             // (, line 87
             // [, line 88
-            ket = cursor;
+            Ket = Cursor;
             // substring, line 88
-            among_var = find_among_b(a_postfix);
-            if (among_var == 0)
+            amongVar = find_among_b(_aPostfix);
+            if (amongVar == 0)
             {
                 return false;
             }
             // ], line 88
-            bra = cursor;
-            switch (among_var)
+            Bra = Cursor;
+            switch (amongVar)
             {
                 case 0:
                     return false;
@@ -274,19 +274,19 @@ namespace UkrainianStemmer.StemmerLanguages
 
         private bool r_verb()
         {
-            int among_var;
+            int amongVar;
             // (, line 95
             // [, line 96
-            ket = cursor;
+            Ket = Cursor;
             // substring, line 96
-            among_var = find_among_b(a_verb);
-            if (among_var == 0)
+            amongVar = find_among_b(_aVerb);
+            if (amongVar == 0)
             {
                 return false;
             }
             // ], line 96
-            bra = cursor;
-            switch (among_var)
+            Bra = Cursor;
+            switch (amongVar)
             {
                 case 0:
                     return false;
@@ -306,19 +306,19 @@ namespace UkrainianStemmer.StemmerLanguages
 
         private bool r_noun()
         {
-            int among_var;
+            int amongVar;
             // (, line 112
             // [, line 113
-            ket = cursor;
+            Ket = Cursor;
             // substring, line 113
-            among_var = find_among_b(a_noun);
-            if (among_var == 0)
+            amongVar = find_among_b(_aNoun);
+            if (amongVar == 0)
             {
                 return false;
             }
             // ], line 113
-            bra = cursor;
-            switch (among_var)
+            Bra = Cursor;
+            switch (amongVar)
             {
                 case 0:
                     return false;
@@ -348,19 +348,19 @@ namespace UkrainianStemmer.StemmerLanguages
 
         private bool r_tidy_up()
         {
-            int among_var;
+            int amongVar;
             // (, line 132
             // [, line 133
-            ket = cursor;
+            Ket = Cursor;
             // substring, line 133
-            among_var = find_among_b(a_5);
-            if (among_var == 0)
+            amongVar = find_among_b(_a5);
+            if (amongVar == 0)
             {
                 return false;
             }
             // ], line 133
-            bra = cursor;
-            switch (among_var)
+            Bra = Cursor;
+            switch (amongVar)
             {
                 case 0:
                     return false;
@@ -400,47 +400,47 @@ namespace UkrainianStemmer.StemmerLanguages
 
         protected bool eq_s(string s)
         {
-            if (limit - cursor < s.Length) return false;
+            if (Limit - Cursor < s.Length) return false;
             int i;
             for (i = 0; i != s.Length; i++)
             {
-                if (current[cursor + i] != s[i]) return false;
+                if (Current[Cursor + i] != s[i]) return false;
             }
-            cursor += s.Length;
+            Cursor += s.Length;
             return true;
         }
 
         protected bool eq_s_b(string s)
         {
-            if (cursor - limit_backward < s.Length) return false;
+            if (Cursor - LimitBackward < s.Length) return false;
             int i;
             for (i = 0; i != s.Length; i++)
             {
-                if (current[cursor - s.Length + i] != s[i]) return false;
+                if (Current[Cursor - s.Length + i] != s[i]) return false;
             }
-            cursor -= s.Length;
+            Cursor -= s.Length;
             return true;
         }
 
         protected int find_among(List<Among> v)
         {
-            int i = 0;
-            int j = v.Count;
+            var i = 0;
+            var j = v.Count;
 
-            int c = cursor;
-            int l = limit;
+            var c = Cursor;
+            var l = Limit;
 
-            int common_i = 0;
-            int common_j = 0;
+            var commonI = 0;
+            var commonJ = 0;
 
-            bool first_key_inspected = false;
+            var firstKeyInspected = false;
 
             while (true)
             {
-                int k = i + ((j - i) >> 1);
-                int diff = 0;
-                int common = common_i < common_j ? common_i : common_j; // smaller
-                Among w = v[k];
+                var k = i + ((j - i) >> 1);
+                var diff = 0;
+                var common = commonI < commonJ ? commonI : commonJ; // smaller
+                var w = v[k];
                 int i2;
                 for (i2 = common; i2 < w.s.Length; i2++)
                 {
@@ -449,19 +449,19 @@ namespace UkrainianStemmer.StemmerLanguages
                         diff = -1;
                         break;
                     }
-                    diff = current[c + common] - w.s[i2];
+                    diff = Current[c + common] - w.s[i2];
                     if (diff != 0) break;
                     common++;
                 }
                 if (diff < 0)
                 {
                     j = k;
-                    common_j = common;
+                    commonJ = common;
                 }
                 else
                 {
                     i = k;
-                    common_i = common;
+                    commonI = common;
                 }
                 if (j - i <= 1)
                 {
@@ -472,18 +472,18 @@ namespace UkrainianStemmer.StemmerLanguages
                     // v->s inspected. This looks messy, but is actually
                     // the optimal approach.
 
-                    if (first_key_inspected) break;
-                    first_key_inspected = true;
+                    if (firstKeyInspected) break;
+                    firstKeyInspected = true;
                 }
             }
             while (true)
             {
-                Among w = v[i];
-                if (common_i >= w.s.Length)
+                var w = v[i];
+                if (commonI >= w.s.Length)
                 {
-                    cursor = c + w.s.Length;
+                    Cursor = c + w.s.Length;
                     if (w.method == null) return w.result;
-                    bool res = false;
+                    var res = false;
                     try
                     {
                         //Object resobj = w.method.Invoke(this);
@@ -494,7 +494,7 @@ namespace UkrainianStemmer.StemmerLanguages
                         res = false;
                         // FIXME - debug message
                     }
-                    cursor = c + w.s.Length;
+                    Cursor = c + w.s.Length;
                     if (res) return w.result;
                 }
                 i = w.substring_i;
@@ -505,23 +505,23 @@ namespace UkrainianStemmer.StemmerLanguages
         // find_among_b is for backwards processing. Same comments apply
         protected int find_among_b(List<Among> v)
         {
-            int i = 0;
-            int j = v.Count;
+            var i = 0;
+            var j = v.Count;
 
-            int c = cursor;
-            int lb = limit_backward;
+            var c = Cursor;
+            var lb = LimitBackward;
 
-            int common_i = 0;
-            int common_j = 0;
+            var commonI = 0;
+            var commonJ = 0;
 
-            bool first_key_inspected = false;
+            var firstKeyInspected = false;
 
             while (true)
             {
-                int k = i + ((j - i) >> 1);
-                int diff = 0;
-                int common = common_i < common_j ? common_i : common_j;
-                Among w = v[k];
+                var k = i + ((j - i) >> 1);
+                var diff = 0;
+                var common = commonI < commonJ ? commonI : commonJ;
+                var w = v[k];
                 int i2;
                 for (i2 = w.s.Length - 1 - common; i2 >= 0; i2--)
                 {
@@ -530,37 +530,37 @@ namespace UkrainianStemmer.StemmerLanguages
                         diff = -1;
                         break;
                     }
-                    diff = current[c - 1 - common] - w.s[i2];
+                    diff = Current[c - 1 - common] - w.s[i2];
                     if (diff != 0) break;
                     common++;
                 }
                 if (diff < 0)
                 {
                     j = k;
-                    common_j = common;
+                    commonJ = common;
                 }
                 else
                 {
                     i = k;
-                    common_i = common;
+                    commonI = common;
                 }
                 if (j - i <= 1)
                 {
                     if (i > 0) break;
                     if (j == i) break;
-                    if (first_key_inspected) break;
-                    first_key_inspected = true;
+                    if (firstKeyInspected) break;
+                    firstKeyInspected = true;
                 }
             }
             while (true)
             {
-                Among w = v[i];
-                if (common_i >= w.s.Length)
+                var w = v[i];
+                if (commonI >= w.s.Length)
                 {
-                    cursor = c - w.s.Length;
+                    Cursor = c - w.s.Length;
                     if (w.method == null) return w.result;
 
-                    bool res = false;
+                    var res = false;
                     try
                     {
                         //Object resobj = w.method.Invoke(this);
@@ -571,7 +571,7 @@ namespace UkrainianStemmer.StemmerLanguages
                         res = false;
                         // FIXME - debug message
                     }
-                    cursor = c - w.s.Length;
+                    Cursor = c - w.s.Length;
                     if (res) return w.result;
                 }
                 i = w.substring_i;
@@ -582,22 +582,22 @@ namespace UkrainianStemmer.StemmerLanguages
         /* to replace chars between c_bra and c_ket in current by the
          * chars in s.
          */
-        protected int replace_s(int c_bra, int c_ket, string s)
+        protected int replace_s(int cBra, int cKet, string s)
         {
-            int adjustment = s.Length - (c_ket - c_bra);
-            current = current.Replace(current.ToString(c_bra, c_ket - c_bra), s);
-            limit += adjustment;
-            if (cursor >= c_ket) cursor += adjustment;
-            else if (cursor > c_bra) cursor = c_bra;
+            var adjustment = s.Length - (cKet - cBra);
+            Current = Current.Replace(Current.ToString(cBra, cKet - cBra), s);
+            Limit += adjustment;
+            if (Cursor >= cKet) Cursor += adjustment;
+            else if (Cursor > cBra) Cursor = cBra;
             return adjustment;
         }
 
         protected void slice_check()
         {
-            if (bra < 0 ||
-                bra > ket ||
-                ket > limit ||
-                limit > current.Length)   // this line could be removed
+            if (Bra < 0 ||
+                Bra > Ket ||
+                Ket > Limit ||
+                Limit > Current.Length)   // this line could be removed
             {
                 Console.WriteLine("faulty slice operation");
                 // FIXME: report error somehow.
@@ -612,7 +612,7 @@ namespace UkrainianStemmer.StemmerLanguages
         protected void slice_from(string s)
         {
             slice_check();
-            replace_s(bra, ket, s);
+            replace_s(Bra, Ket, s);
         }
 
         protected void slice_del()
@@ -620,62 +620,62 @@ namespace UkrainianStemmer.StemmerLanguages
             slice_from("");
         }
 
-        protected void insert(int c_bra, int c_ket, string s)
+        protected void Insert(int cBra, int cKet, string s)
         {
-            int adjustment = replace_s(c_bra, c_ket, s);
-            if (c_bra <= bra) bra += adjustment;
-            if (c_bra <= ket) ket += adjustment;
+            var adjustment = replace_s(cBra, cKet, s);
+            if (cBra <= Bra) Bra += adjustment;
+            if (cBra <= Ket) Ket += adjustment;
         }
 
         /* Copy the slice into the supplied StringBuffer */
         protected string slice_to(string s)
         {
             slice_check();
-            int len = ket - bra;
-            s = current.ToString(bra, ket - bra);
+            var len = Ket - Bra;
+            s = Current.ToString(Bra, Ket - Bra);
             return s;
         }
 
         protected string assign_to(string s)
         {
-            s = current.ToString(0, limit);
+            s = Current.ToString(0, Limit);
             return s;
         }
 
         public string Stem(string s)
         {
-            this.setCurrent(s);
-            lab0: do
+            this.SetCurrent(s);
+            do
             {
-                int v_1 = cursor;
-                lab1: do
+                var v1 = Cursor;
+                do
                 {
                     {
-                        int v_2 = cursor;
-                        lab2: do
+                        var v2 = Cursor;
+                        do
                         {
                             {
-                                int c = cursor + 4;
-                                if (0 > c || c > limit)
+                                var c = Cursor + 4;
+                                if (0 > c || c > Limit)
                                 {
                                     goto lab2_end;
                                 }
-                                cursor = c;
+                                Cursor = c;
                             }
                             goto lab1_end;
                         } while (false);
                         lab2_end:
-                        cursor = v_2;
+                        Cursor = v2;
                     }
                     goto lab0_end;
                 } while (false);
                 lab1_end:
-                cursor = v_1;
+                Cursor = v1;
 
-                lab3: do
+                do
                 {
-                    int v_3 = cursor;
-                    lab4: do
+                    var v3 = Cursor;
+                    do
                     {
                         if (!r_exception1())
                         {
@@ -684,31 +684,31 @@ namespace UkrainianStemmer.StemmerLanguages
                         goto lab3_end;
                     } while (false);
                     lab4_end:
-                    cursor = v_3;
+                    Cursor = v3;
 
-                    limit_backward = cursor;
-                    cursor = limit;
+                    LimitBackward = Cursor;
+                    Cursor = Limit;
 
-                    int v_4 = limit - cursor;
-                    lab5: do
+                    var v4 = Limit - Cursor;
+                    do
                     {
 
-                        int v_5 = limit - cursor;
-                        lab6: do
+                        var v5 = Limit - Cursor;
+                        do
                         {
                             // call postfix, line 157
                             if (!r_postfix())
                             {
-                                cursor = limit - v_5;
+                                Cursor = Limit - v5;
                                 goto lab6_end;
                             }
                         } while (false);
                         lab6_end:
                         // or, line 158
-                        lab7: do
+                        do
                         {
-                            int v_6 = limit - cursor;
-                            lab8: do
+                            var v6 = Limit - Cursor;
+                            do
                             {
                                 // call adjective, line 158
                                 if (!r_adjective())
@@ -718,8 +718,8 @@ namespace UkrainianStemmer.StemmerLanguages
                                 goto lab7_end;
                             } while (false);
                             lab8_end:
-                            cursor = limit - v_6;
-                            lab9: do
+                            Cursor = Limit - v6;
+                            do
                             {
                                 // call verb, line 158
                                 if (!r_verb())
@@ -729,7 +729,7 @@ namespace UkrainianStemmer.StemmerLanguages
                                 goto lab7_end;
                             } while (false);
                             lab9_end:
-                            cursor = limit - v_6;
+                            Cursor = Limit - v6;
                             // call noun, line 158
                             if (!r_noun())
                             {
@@ -740,10 +740,10 @@ namespace UkrainianStemmer.StemmerLanguages
                         ;
                     } while (false);
                     lab5_end:
-                    cursor = limit - v_4;
+                    Cursor = Limit - v4;
                     // do, line 160
-                    int v_7 = limit - cursor;
-                    lab10: do
+                    var v7 = Limit - Cursor;
+                    do
                     {
                         // call tidy_up, line 160
                         if (!r_tidy_up())
@@ -752,14 +752,14 @@ namespace UkrainianStemmer.StemmerLanguages
                         }
                     } while (false);
                     lab10_end:
-                    cursor = limit - v_7;
-                    cursor = limit_backward;
+                    Cursor = Limit - v7;
+                    Cursor = LimitBackward;
                 } while (false);
                 lab3_end:
                 ;
             } while (false);
             lab0_end:
-            return this.getCurrent();
+            return this.GetCurrent();
         }
     }
 }
