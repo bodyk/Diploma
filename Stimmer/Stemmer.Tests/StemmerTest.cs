@@ -4,6 +4,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using NUnit.Framework;
+using UkrainianStemmer.Interfaces;
 using UkrainianStemmer.Services;
 
 namespace Stemmer.Tests
@@ -21,7 +22,7 @@ namespace Stemmer.Tests
         {
 
             index = new Dictionary<string, string>();
-            var stemmer = new SnowballProgram();
+            var stemmer = new UkrainianStemmer.StemmerLanguages.UkrainianStemmer();
 
             var reader = new StreamReader(testDataFile);
 
@@ -39,10 +40,9 @@ namespace Stemmer.Tests
 
                     if (reworked.Length > 0 && !char.IsWhiteSpace(reworked[0]))
                     {
-                        stemmer.setCurrent(reworked);
-                        stemmer.stem();
+                        var word = stemmer.Stem(reworked.ToString());
 
-                        addWord(reworked.ToString(), stemmer.getCurrent());
+                        AddWord(reworked.ToString(), word);
 
                     }
                     input = input.Remove(0, input.Length);
@@ -83,7 +83,7 @@ namespace Stemmer.Tests
 
         }
 
-        public void addWord(string start, string stemmed)
+        public void AddWord(string start, string stemmed)
         {
             if (!index.ContainsKey(start))
             {

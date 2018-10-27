@@ -1,8 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿/*
+ *  Port of Snowball stemmers on C#
+ *  Original stemmers can be found on http://snowball.tartarus.org
+ *  Licence still BSD: http://snowball.tartarus.org/license.php
+ *  
+ *  Most of stemmers are ported from Java by Iveonik Systems ltd. (www.iveonik.com)
+ */
+
 using System.Text;
-using System.Threading.Tasks;
 using UkrainianStemmer.Services;
 
 namespace UkrainianStemmer.StemmerLanguages
@@ -11,46 +15,45 @@ namespace UkrainianStemmer.StemmerLanguages
     {
 
         //    // current string
-        protected StringBuilder Current;
-
-        protected int Cursor;
-        protected int Limit;
-        protected int LimitBackward;
-        protected int Bra;
-        protected int Ket;
+        protected StringBuilder current;
+        protected int cursor;
+        protected int limit;
+        protected int limit_backward;
+        protected int bra;
+        protected int ket;
 
 
 
         protected StemmerOperations()
         {
-            Current = new StringBuilder();
-            SetCurrent("");
+            current = new StringBuilder();
+            setCurrent("");
         }
 
         //    /**
         //     * Set the current string.
         //     */
-        protected void SetCurrent(string value)
+        protected void setCurrent(string value)
         {
             //           current.replace(0, current.length(), value);
             //current=current.Replace(current.ToString(), value);
             //current = StringBufferReplace(0, current.Length, current, value);
             //current = StringBufferReplace(0, value.Length, current, value);
-            Current.Remove(0, Current.Length);
-            Current.Append(value);
-            Cursor = 0;
-            Limit = Current.Length;
-            LimitBackward = 0;
-            Bra = Cursor;
-            Ket = Limit;
+            current.Remove(0, current.Length);
+            current.Append(value);
+            cursor = 0;
+            limit = current.Length;
+            limit_backward = 0;
+            bra = cursor;
+            ket = limit;
         }
 
         //    /**
         //     * Get the current string.
         //     */
-        protected string GetCurrent()
+        protected string getCurrent()
         {
-            string result = Current.ToString();
+            string result = current.ToString();
             // Make a new StringBuffer.  If we reuse the old one, and a user of
             // the library keeps a reference to the buffer returned (for example,
             // by converting it to a String in a way which doesn't force a copy),
@@ -63,53 +66,53 @@ namespace UkrainianStemmer.StemmerLanguages
 
         protected void copy_from(StemmerOperations other)
         {
-            Current = other.Current;
-            Cursor = other.Cursor;
-            Limit = other.Limit;
-            LimitBackward = other.LimitBackward;
-            Bra = other.Bra;
-            Ket = other.Ket;
+            current = other.current;
+            cursor = other.cursor;
+            limit = other.limit;
+            limit_backward = other.limit_backward;
+            bra = other.bra;
+            ket = other.ket;
         }
 
         protected bool in_grouping(char[] s, int min, int max)
         {
-            if (Cursor >= Limit) return false;
+            if (cursor >= limit) return false;
             //           char ch = current.charAt(cursor);
-            int ch = (int) Current[Cursor];
+            int ch = (int)current[cursor];
             if (ch > max || ch < min) return false;
             //           ch -= min;
             ch -= min;
             if ((s[ch >> 3] & (0X1 << (ch & 0X7))) == 0) return false;
-            Cursor++;
+            cursor++;
             return true;
         }
 
         protected bool in_grouping_b(char[] s, int min, int max)
         {
-            if (Cursor <= LimitBackward) return false;
+            if (cursor <= limit_backward) return false;
             //           char ch = current.charAt(cursor - 1);
-            int ch = (int) Current[Cursor - 1];
+            int ch = (int)current[cursor - 1];
             if (ch > max || ch < min) return false;
             ch -= min;
             if ((s[ch >> 3] & (0X1 << (ch & 0X7))) == 0) return false;
-            Cursor--;
+            cursor--;
             return true;
         }
 
         protected bool out_grouping(char[] s, int min, int max)
         {
-            if (Cursor >= Limit) return false;
+            if (cursor >= limit) return false;
             //           char ch = current.charAt(cursor);
-            int ch = (int) Current[Cursor];
+            int ch = (int)current[cursor];
             if (ch > max || ch < min)
             {
-                Cursor++;
+                cursor++;
                 return true;
             }
             ch -= min;
             if ((s[ch >> 3] & (0X1 << (ch & 0X7))) == 0)
             {
-                Cursor++;
+                cursor++;
                 return true;
             }
             return false;
@@ -117,18 +120,18 @@ namespace UkrainianStemmer.StemmerLanguages
 
         protected bool out_grouping_b(char[] s, int min, int max)
         {
-            if (Cursor <= LimitBackward) return false;
+            if (cursor <= limit_backward) return false;
             //           char ch = current.charAt(cursor - 1);
-            int ch = (int) Current[Cursor - 1];
+            int ch = (int)current[cursor - 1];
             if (ch > max || ch < min)
             {
-                Cursor--;
+                cursor--;
                 return true;
             }
             ch -= min;
             if ((s[ch >> 3] & (0X1 << (ch & 0X7))) == 0)
             {
-                Cursor--;
+                cursor--;
                 return true;
             }
             return false;
@@ -136,67 +139,67 @@ namespace UkrainianStemmer.StemmerLanguages
 
         protected bool in_range(int min, int max)
         {
-            if (Cursor >= Limit) return false;
+            if (cursor >= limit) return false;
             //           char ch = current.charAt(cursor);
-            int ch = (int) Current[Cursor];
+            int ch = (int)current[cursor];
             if (ch > max || ch < min) return false;
-            Cursor++;
+            cursor++;
             return true;
         }
 
         protected bool in_range_b(int min, int max)
         {
-            if (Cursor <= LimitBackward) return false;
+            if (cursor <= limit_backward) return false;
             //           char ch = current.charAt(cursor - 1);
-            int ch = (int) Current[Cursor - 1];
+            int ch = (int)current[cursor - 1];
             if (ch > max || ch < min) return false;
-            Cursor--;
+            cursor--;
             return true;
         }
 
         protected bool out_range(int min, int max)
         {
-            if (Cursor >= Limit) return false;
+            if (cursor >= limit) return false;
             //           char ch = current.charAt(cursor);
-            int ch = (int) Current[Cursor];
+            int ch = (int)current[cursor];
             if (!(ch > max || ch < min)) return false;
-            Cursor++;
+            cursor++;
             return true;
         }
 
         protected bool out_range_b(int min, int max)
         {
-            if (Cursor <= LimitBackward) return false;
+            if (cursor <= limit_backward) return false;
             //           char ch = current.charAt(cursor - 1);
-            int ch = (int) Current[Cursor - 1];
+            int ch = (int)current[cursor - 1];
             if (!(ch > max || ch < min)) return false;
-            Cursor--;
+            cursor--;
             return true;
         }
 
-        protected bool eq_s(int sSize, string s)
+        protected bool eq_s(int s_size, string s)
         {
-            if (Limit - Cursor < sSize) return false;
+            if (limit - cursor < s_size) return false;
             int i;
-            for (i = 0; i != sSize; i++)
+            for (i = 0; i != s_size; i++)
             {
-                if (Current[Cursor + i] != s[i]) return false;
+                if (current[cursor + i] != s[i]) return false;
                 //               if (current[cursor + i] != s[i]) return false;
             }
-            Cursor += sSize;
+            cursor += s_size;
             return true;
         }
 
-        protected bool eq_s_b(int sSize, string s)
+        protected bool eq_s_b(int s_size, string s)
         {
-            if (Cursor - LimitBackward < sSize) return false;
+            if (cursor - limit_backward < s_size) return false;
             int i;
-            for (i = 0; i != sSize; i++)
+            for (i = 0; i != s_size; i++)
             {
                 //               if (current.charAt(cursor - s_size + i) != s.charAt(i)) return false;
-                if (Current[Cursor - sSize + i] != s[i]) return false;
+                if (current[cursor - s_size + i] != s[i]) return false;
             }
-            Cursor -= sSize;
+            cursor -= s_size;
             return true;
         }
 
@@ -211,23 +214,23 @@ namespace UkrainianStemmer.StemmerLanguages
         }
 
 
-        internal int find_among(Among[] v, int vSize)
+        internal int find_among(Among[] v, int v_size)
         {
             int i = 0;
-            int j = vSize;
+            int j = v_size;
 
-            int c = Cursor;
-            int l = Limit;
+            int c = cursor;
+            int l = limit;
 
-            int commonI = 0;
-            int commonJ = 0;
+            int common_i = 0;
+            int common_j = 0;
 
-            bool firstKeyInspected = false;
+            bool first_key_inspected = false;
             while (true)
             {
                 int k = i + ((j - i) >> 1);
                 int diff = 0;
-                int common = commonI < commonJ ? commonI : commonJ; // smaller
+                int common = common_i < common_j ? common_i : common_j; // smaller
                 Among w = v[k];
                 int i2;
 
@@ -238,19 +241,19 @@ namespace UkrainianStemmer.StemmerLanguages
                         diff = -1;
                         break;
                     }
-                    diff = Current[c + common] - w.s[i2];
+                    diff = current[c + common] - w.s[i2];
                     if (diff != 0) break;
                     common++;
                 }
                 if (diff < 0)
                 {
                     j = k;
-                    commonJ = common;
+                    common_j = common;
                 }
                 else
                 {
                     i = k;
-                    commonI = common;
+                    common_i = common;
                 }
                 if (j - i <= 1)
                 {
@@ -259,16 +262,16 @@ namespace UkrainianStemmer.StemmerLanguages
                     // - but now we need to go round once more to get
                     // v->s inspected. This looks messy, but is actually
                     // the optimal approach.
-                    if (firstKeyInspected) break;
-                    firstKeyInspected = true;
+                    if (first_key_inspected) break;
+                    first_key_inspected = true;
                 }
             }
             while (true)
             {
                 Among w = v[i];
-                if (commonI >= w.s_size)
+                if (common_i >= w.s_size)
                 {
-                    Cursor = c + w.s_size;
+                    cursor = c + w.s_size;
                     if (w.method == null) return w.result;
                     //bool res;
                     //try
@@ -296,20 +299,20 @@ namespace UkrainianStemmer.StemmerLanguages
 
         //    // find_among_b is for backwards processing. Same comments apply
 
-        internal int find_among_b(Among[] v, int vSize)
+        internal int find_among_b(Among[] v, int v_size)
         {
             int i = 0;
-            int j = vSize;
-            int c = Cursor;
-            int lb = LimitBackward;
-            int commonI = 0;
-            int commonJ = 0;
-            bool firstKeyInspected = false;
+            int j = v_size;
+            int c = cursor;
+            int lb = limit_backward;
+            int common_i = 0;
+            int common_j = 0;
+            bool first_key_inspected = false;
             while (true)
             {
                 int k = i + ((j - i) >> 1);
                 int diff = 0;
-                int common = commonI < commonJ ? commonI : commonJ;
+                int common = common_i < common_j ? common_i : common_j;
                 Among w = v[k];
                 int i2;
                 for (i2 = w.s_size - 1 - common; i2 >= 0; i2--)
@@ -320,34 +323,34 @@ namespace UkrainianStemmer.StemmerLanguages
                         break;
                     }
                     //                   diff = current.charAt(c - 1 - common) - w.s[i2];
-                    diff = Current[c - 1 - common] - w.s[i2];
+                    diff = current[c - 1 - common] - w.s[i2];
                     if (diff != 0) break;
                     common++;
                 }
                 if (diff < 0)
                 {
                     j = k;
-                    commonJ = common;
+                    common_j = common;
                 }
                 else
                 {
                     i = k;
-                    commonI = common;
+                    common_i = common;
                 }
                 if (j - i <= 1)
                 {
                     if (i > 0) break;
                     if (j == i) break;
-                    if (firstKeyInspected) break;
-                    firstKeyInspected = true;
+                    if (first_key_inspected) break;
+                    first_key_inspected = true;
                 }
             }
             while (true)
             {
                 Among w = v[i];
-                if (commonI >= w.s_size)
+                if (common_i >= w.s_size)
                 {
-                    Cursor = c - w.s_size;
+                    cursor = c - w.s_size;
                     if (w.method == null) return w.result;
                     //boolean res;
                     //try 
@@ -377,14 +380,14 @@ namespace UkrainianStemmer.StemmerLanguages
         //    /* to replace chars between c_bra and c_ket in current by the
         //     * chars in s.
         //     */
-        protected int replace_s(int cBra, int cKet, string s)
+        protected int replace_s(int c_bra, int c_ket, string s)
         {
-            int adjustment = s.Length - (cKet - cBra);
+            int adjustment = s.Length - (c_ket - c_bra);
             //           current.replace(c_bra, c_ket, s);
-            Current = StringBufferReplace(cBra, cKet, Current, s);
-            Limit += adjustment;
-            if (Cursor >= cKet) Cursor += adjustment;
-            else if (Cursor > cBra) Cursor = cBra;
+            current = StringBufferReplace(c_bra, c_ket, current, s);
+            limit += adjustment;
+            if (cursor >= c_ket) cursor += adjustment;
+            else if (cursor > c_bra) cursor = c_bra;
             return adjustment;
         }
 
@@ -413,10 +416,10 @@ namespace UkrainianStemmer.StemmerLanguages
 
         protected void slice_check()
         {
-            if (Bra < 0 ||
-                Bra > Ket ||
-                Ket > Limit ||
-                Limit > Current.Length) // this line could be removed
+            if (bra < 0 ||
+                bra > ket ||
+                ket > limit ||
+                limit > current.Length)   // this line could be removed
             {
                 //System.err.println("faulty slice operation");
                 // FIXME: report error somehow.
@@ -431,7 +434,7 @@ namespace UkrainianStemmer.StemmerLanguages
         protected void slice_from(string s)
         {
             slice_check();
-            replace_s(Bra, Ket, s);
+            replace_s(bra, ket, s);
         }
 
         protected void slice_from(StringBuilder s)
@@ -444,30 +447,30 @@ namespace UkrainianStemmer.StemmerLanguages
             slice_from("");
         }
 
-        protected void Insert(int cBra, int cKet, string s)
+        protected void insert(int c_bra, int c_ket, string s)
         {
-            int adjustment = replace_s(cBra, cKet, s);
-            if (cBra <= Bra) Bra += adjustment;
-            if (cBra <= Ket) Ket += adjustment;
+            int adjustment = replace_s(c_bra, c_ket, s);
+            if (c_bra <= bra) bra += adjustment;
+            if (c_bra <= ket) ket += adjustment;
         }
 
-        protected void Insert(int cBra, int cKet, StringBuilder s)
+        protected void insert(int c_bra, int c_ket, StringBuilder s)
         {
-            Insert(cBra, cKet, s.ToString());
+            insert(c_bra, c_ket, s.ToString());
         }
 
         //    /* Copy the slice into the supplied StringBuffer */
         protected StringBuilder slice_to(StringBuilder s)
         {
             slice_check();
-            int len = Ket - Bra;
+            int len = ket - bra;
             //           s.replace(0, s.length(), current.substring(bra, ket));
             //           int lengh = string.IsNullOrEmpty(s.ToString())!= true ? s.Length : 0;
             //           if (ket == current.Length) ket--;
             //string ss = current.ToString().Substring(bra, len);
             //StringBufferReplace(0, s.Length, s, ss);
             //return s;
-            return StringBufferReplace(0, s.Length, s, Current.ToString().Substring(Bra, len));
+            return StringBufferReplace(0, s.Length, s, current.ToString().Substring(bra, len));
             //           return StringBufferReplace(0, lengh, s, current.ToString().Substring(bra, ket));
             //           return s;
         }
@@ -485,7 +488,597 @@ namespace UkrainianStemmer.StemmerLanguages
         {
             //s.replace(0, s.length(), current.substring(0, limit));
             //return s;
-            return StringBufferReplace(0, s.Length, s, Current.ToString().Substring(0, Limit));
+            return StringBufferReplace(0, s.Length, s, current.ToString().Substring(0, limit));
+        }
+
+        //    protected StringBuilder assign_to(StringBuilder s)
+        //    {
+        //    s.replace(0, s.length(), current.substring(0, limit));
+        //    return s;
+        //    }
+
+        ///*
+        //extern void debug(struct SN_env * z, int number, int line_count)
+        //{   int i;
+        //    int limit = SIZE(z->p);
+        //    //if (number >= 0) printf("%3d (line %4d): '", number, line_count);
+        //    if (number >= 0) printf("%3d (line %4d): [%d]'", number, line_count,limit);
+        //    for (i = 0; i <= limit; i++)
+        //    {   if (z->lb == i) printf("{");
+        //        if (z->bra == i) printf("[");
+        //        if (z->c == i) printf("|");
+        //        if (z->ket == i) printf("]");
+        //        if (z->l == i) printf("}");
+        //        if (i < limit)
+        //        {   int ch = z->p[i];
+        //            if (ch == 0) ch = '#';
+        //            printf("%c", ch);
+        //        }
+        //    }
+        //    printf("'\n");
+        //}
+        //*/
+
+        //};
+        ///////////////////////////// METHODS FOR CZECH STEMMER AGRESSIVE //////////////////////////////////
+        protected void removeDerivational()
+        {
+            int len = current.Length;
+            if ((len > 8) &&
+                current.ToString().Substring(len - 6, 6).Equals("obinec"))
+            {
+                current = current.Remove(len - 6, 6);
+                return;
+            }//len >8
+            if (len > 7)
+            {
+                if (current.ToString().Substring(len - 5, 5).Equals("ion\u00e1\u0159"))
+                { // -ionář 
+
+                    current = current.Remove(len - 4, 4);
+                    palatalise();
+                    return;
+                }
+                if (current.ToString().Substring(len - 5, 5).Equals("ovisk") ||
+                        current.ToString().Substring(len - 5, 5).Equals("ovstv") ||
+                        current.ToString().Substring(len - 5, 5).Equals("ovi\u0161t") ||  //-ovišt
+                        current.ToString().Substring(len - 5, 5).Equals("ovn\u00edk"))
+                { //-ovník
+
+                    current = current.Remove(len - 5, 5);
+                    return;
+                }
+            }//len>7
+            if (len > 6)
+            {
+                if (current.ToString().Substring(len - 4, 4).Equals("\u00e1sek") || // -ásek 
+                    current.ToString().Substring(len - 4, 4).Equals("loun") ||
+                    current.ToString().Substring(len - 4, 4).Equals("nost") ||
+                    current.ToString().Substring(len - 4, 4).Equals("teln") ||
+                    current.ToString().Substring(len - 4, 4).Equals("ovec") ||
+                    current.ToString().Substring(len - 5, 5).Equals("ov\u00edk") || //-ovík
+                    current.ToString().Substring(len - 4, 4).Equals("ovtv") ||
+                    current.ToString().Substring(len - 4, 4).Equals("ovin") ||
+                    current.ToString().Substring(len - 4, 4).Equals("\u0161tin"))
+                { //-štin
+
+                    current = current.Remove(len - 4, 4);
+                    return;
+                }
+                if (current.ToString().Substring(len - 4, 4).Equals("enic") ||
+                        current.ToString().Substring(len - 4, 4).Equals("inec") ||
+                        current.ToString().Substring(len - 4, 4).Equals("itel"))
+                {
+
+                    current = current.Remove(len - 3, 3);
+                    palatalise();
+                    return;
+                }
+            }//len>6
+            if (len > 5)
+            {
+                if (current.ToString().Substring(len - 3, 3).Equals("\u00e1rn"))
+                { //-árn
+                    current = current.Remove(len - 3, 3);
+                    return;
+                }
+                if (current.ToString().Substring(len - 3, 3).Equals("\u011bnk"))
+                { //-ěnk
+
+                    current = current.Remove(len - 2, 2);
+                    palatalise();
+
+                    return;
+                }
+                if (current.ToString().Substring(len - 3, 3).Equals("i\u00e1n") || //-ián
+                        current.ToString().Substring(len - 3, 3).Equals("ist") ||
+                        current.ToString().Substring(len - 3, 3).Equals("isk") ||
+                        current.ToString().Substring(len - 3, 3).Equals("i\u0161t") || //-išt
+                        current.ToString().Substring(len - 3, 3).Equals("itb") ||
+                        current.ToString().Substring(len - 3, 3).Equals("\u00edrn"))
+                {  //-írn
+
+                    current = current.Remove(len - 2, 2);
+                    palatalise();
+                    return;
+                }
+                if (current.ToString().Substring(len - 3, 3).Equals("och") ||
+                        current.ToString().Substring(len - 3, 3).Equals("ost") ||
+                        current.ToString().Substring(len - 3, 3).Equals("ovn") ||
+                        current.ToString().Substring(len - 3, 3).Equals("oun") ||
+                        current.ToString().Substring(len - 3, 3).Equals("out") ||
+                        current.ToString().Substring(len - 3, 3).Equals("ou\u0161"))
+                {  //-ouš
+
+                    current = current.Remove(len - 3, 3);
+                    return;
+                }
+                if (current.ToString().Substring(len - 3, 3).Equals("u\u0161k"))
+                { //-ušk
+
+                    current = current.Remove(len - 3, 3);
+                    return;
+                }
+                if (current.ToString().Substring(len - 3, 3).Equals("kyn") ||
+                    current.ToString().Substring(len - 3, 3).Equals("\u010dan") ||    //-čan
+                    current.ToString().Substring(len - 3, 3).Equals("k\u00e1\u0159") || //kář
+                    current.ToString().Substring(len - 3, 3).Equals("n\u00e9\u0159") || //néř
+                    current.ToString().Substring(len - 3, 3).Equals("n\u00edk") ||      //-ník
+                    current.ToString().Substring(len - 3, 3).Equals("ctv") ||
+                    current.ToString().Substring(len - 3, 3).Equals("stv"))
+                {
+
+                    current = current.Remove(len - 3, 3);
+                    return;
+                }
+            }//len>5
+            if (len > 4)
+            {
+                if (current.ToString().Substring(len - 2, 2).Equals("\u00e1\u010d") || // -áč
+                    current.ToString().Substring(len - 2, 2).Equals("a\u010d") ||      //-ač
+                    current.ToString().Substring(len - 2, 2).Equals("\u00e1n") ||      //-án
+                        current.ToString().Substring(len - 2, 2).Equals("an") ||
+                        current.ToString().Substring(len - 2, 2).Equals("\u00e1\u0159") || //-ář
+                        current.ToString().Substring(len - 2, 2).Equals("as"))
+                {
+
+                    current = current.Remove(len - 2, 2);
+                    return;
+                }
+                if (current.ToString().Substring(len - 2, 2).Equals("ec") ||
+                        current.ToString().Substring(len - 2, 2).Equals("en") ||
+                        current.ToString().Substring(len - 2, 2).Equals("\u011bn") ||   //-ěn
+                        current.ToString().Substring(len - 2, 2).Equals("\u00e9\u0159"))
+                {  //-éř
+
+                    current = current.Remove(len - 1, 1);
+                    palatalise();
+                    return;
+                }
+                if (current.ToString().Substring(len - 2, 2).Equals("\u00ed\u0159") || //-íř
+                        current.ToString().Substring(len - 2, 2).Equals("ic") ||
+                        current.ToString().Substring(len - 2, 2).Equals("in") ||
+                        current.ToString().Substring(len - 2, 2).Equals("\u00edn") ||  //-ín
+                        current.ToString().Substring(len - 2, 2).Equals("it") ||
+                        current.ToString().Substring(len - 2, 2).Equals("iv"))
+                {
+
+                    current = current.Remove(len - 1, 1);
+                    palatalise();
+                    return;
+                }
+
+                if (current.ToString().Substring(len - 2, 2).Equals("ob") ||
+                        current.ToString().Substring(len - 2, 2).Equals("ot") ||
+                        current.ToString().Substring(len - 2, 2).Equals("ov") ||
+                        current.ToString().Substring(len - 2, 2).Equals("o\u0148"))
+                { //-oň 
+
+                    current = current.Remove(len - 2, 2);
+                    return;
+                }
+                if (current.ToString().Substring(len - 2, 2).Equals("ul"))
+                {
+
+                    current = current.Remove(len - 2, 2);
+                    return;
+                }
+                if (current.ToString().Substring(len - 2, 2).Equals("yn"))
+                {
+
+                    current = current.Remove(len - 2, 2);
+                    return;
+                }
+                if (current.ToString().Substring(len - 2, 2).Equals("\u010dk") ||              //-čk
+                        current.ToString().Substring(len - 2, 2).Equals("\u010dn") ||  //-čn
+                        current.ToString().Substring(len - 2, 2).Equals("dl") ||
+                        current.ToString().Substring(len - 2, 2).Equals("nk") ||
+                        current.ToString().Substring(len - 2, 2).Equals("tv") ||
+                        current.ToString().Substring(len - 2, 2).Equals("tk") ||
+                        current.ToString().Substring(len - 2, 2).Equals("vk"))
+                {
+
+                    current = current.Remove(len - 2, 2);
+                    return;
+                }
+            }//len>4
+            if (len > 3)
+            {
+                if (current.ToString()[current.Length - 1] == 'c' ||
+                   current.ToString()[current.Length - 1] == '\u010d' || //-č
+                   current.ToString()[current.Length - 1] == 'k' ||
+                   current.ToString()[current.Length - 1] == 'l' ||
+                   current.ToString()[current.Length - 1] == 'n' ||
+                   current.ToString()[current.Length - 1] == 't')
+                {
+
+                    current = current.Remove(len - 1, 1);
+                    return;
+                }
+            }//len>3	
+        }//removeDerivational
+
+        protected void removeAugmentative()
+        {
+            int len = current.Length;
+            //
+            if ((len > 6) &&
+                 current.ToString().Substring(len - 4, 4).Equals("ajzn"))
+            {
+
+                current = current.Remove(len - 4, 4);
+                return;
+            }
+            if ((len > 5) &&
+                (current.ToString().Substring(len - 3, 3).Equals("izn") ||
+                 current.ToString().Substring(len - 3, 3).Equals("isk")))
+            {
+
+                current = current.Remove(len - 2, 2);
+                palatalise();
+                return;
+            }
+            if ((len > 4) &&
+                 current.ToString().Substring(len - 2, 2).Equals("\00e1k"))
+            { //-ák
+
+                current = current.Remove(len - 2, 2);
+                return;
+            }
+        }
+
+        protected void removeDiminutive()
+        {
+            int len = current.Length;
+            // 
+            if ((len > 7) &&
+                 current.ToString().Substring(len - 5, 5).Equals("ou\u0161ek"))
+            {  //-oušek
+
+                current = current.Remove(len - 5, 5);
+                return;
+            }
+            if (len > 6)
+            {
+                if (current.ToString().Substring(len - 4, 4).Equals("e\u010dek") ||      //-eček
+                   current.ToString().Substring(len - 4, 4).Equals("\u00e9\u010dek") ||    //-éček
+                   current.ToString().Substring(len - 4, 4).Equals("i\u010dek") ||         //-iček
+                   current.ToString().Substring(len - 4, 4).Equals("\u00ed\u010dek") ||    //íček
+                   current.ToString().Substring(len - 4, 4).Equals("enek") ||
+                   current.ToString().Substring(len - 4, 4).Equals("\u00e9nek") ||      //-ének
+                   current.ToString().Substring(len - 4, 4).Equals("inek") ||
+                   current.ToString().Substring(len - 4, 4).Equals("\u00ednek"))
+                {      //-ínek
+
+                    current = current.Remove(len - 3, 3);
+                    palatalise();
+                    return;
+                }
+                if (current.ToString().Substring(len - 4, 4).Equals("\u00e1\u010dek") || //áček
+                     current.ToString().Substring(len - 4, 4).Equals("a\u010dek") ||   //aček
+                     current.ToString().Substring(len - 4, 4).Equals("o\u010dek") ||   //oček
+                     current.ToString().Substring(len - 4, 4).Equals("u\u010dek") ||   //uček
+                     current.ToString().Substring(len - 4, 4).Equals("anek") ||
+                     current.ToString().Substring(len - 4, 4).Equals("onek") ||
+                     current.ToString().Substring(len - 4, 4).Equals("unek") ||
+             current.ToString().Substring(len - 4, 4).Equals("\u00e1nek"))
+                {   //-ánek
+
+                    current = current.Remove(len - 4, 4);
+                    return;
+                }
+            }//len>6
+            if (len > 5)
+            {
+                if (current.ToString().Substring(len - 3, 3).Equals("e\u010dk") ||   //-ečk
+                   current.ToString().Substring(len - 3, 3).Equals("\u00e9\u010dk") ||  //-éčk 
+                   current.ToString().Substring(len - 3, 3).Equals("i\u010dk") ||   //-ičk
+                   current.ToString().Substring(len - 3, 3).Equals("\u00ed\u010dk") ||    //-íčk
+                   current.ToString().Substring(len - 3, 3).Equals("enk") ||   //-enk
+                   current.ToString().Substring(len - 3, 3).Equals("\u00e9nk") ||  //-énk 
+                   current.ToString().Substring(len - 3, 3).Equals("ink") ||   //-ink
+                   current.ToString().Substring(len - 3, 3).Equals("\u00ednk"))
+                {   //-ínk
+
+                    current = current.Remove(len - 3, 3);
+                    palatalise();
+                    return;
+                }
+                if (current.ToString().Substring(len - 3, 3).Equals("\u00e1\u010dk") ||  //-áčk
+                    current.ToString().Substring(len - 3, 3).Equals("au010dk") || //-ačk
+                    current.ToString().Substring(len - 3, 3).Equals("o\u010dk") ||  //-očk
+                    current.ToString().Substring(len - 3, 3).Equals("u\u010dk") ||   //-učk 
+                    current.ToString().Substring(len - 3, 3).Equals("ank") ||
+                    current.ToString().Substring(len - 3, 3).Equals("onk") ||
+                    current.ToString().Substring(len - 3, 3).Equals("unk"))
+                {
+
+                    current = current.Remove(len - 3, 3);
+                    return;
+
+                }
+                if (current.ToString().Substring(len - 3, 3).Equals("\u00e1tk") || //-átk
+                   current.ToString().Substring(len - 3, 3).Equals("\u00e1nk") ||  //-ánk
+           current.ToString().Substring(len - 3, 3).Equals("u\u0161k"))
+                {   //-ušk
+
+                    current = current.Remove(len - 3, 3);
+                    return;
+                }
+            }//len>5
+            if (len > 4)
+            {
+                if (current.ToString().Substring(len - 2, 2).Equals("ek") ||
+                   current.ToString().Substring(len - 2, 2).Equals("\u00e9k") ||  //-ék
+                   current.ToString().Substring(len - 2, 2).Equals("\u00edk") ||  //-ík
+                   current.ToString().Substring(len - 2, 2).Equals("ik"))
+                {
+
+                    current = current.Remove(len - 1, 1);
+                    palatalise();
+                    return;
+                }
+                if (current.ToString().Substring(len - 2, 2).Equals("\u00e1k") ||  //-ák
+                    current.ToString().Substring(len - 2, 2).Equals("ak") ||
+                    current.ToString().Substring(len - 2, 2).Equals("ok") ||
+                    current.ToString().Substring(len - 2, 2).Equals("uk"))
+                {
+
+                    current = current.Remove(len - 1, 1);
+                    return;
+                }
+            }
+            if ((len > 3) &&
+                 current.ToString().Substring(len - 1, 1).Equals("k"))
+            {
+
+                current = current.Remove(len - 1, 1);
+                return;
+            }
+        }//removeDiminutives
+
+        protected void removeComparative()
+        {
+            int len = current.Length;
+            // 
+            if ((len > 5) &&
+                (current.ToString().Substring(len - 3, 3).Equals("ej\u0161") ||  //-ejš
+                 current.ToString().Substring(len - 3, 3).Equals("\u011bj\u0161")))
+            {   //-ějš
+
+                current = current.Remove(len - 2, 2);
+                palatalise();
+                return;
+            }
+        }
+
+        private void palatalise()
+        {
+            int len = current.Length;
+
+            if (current.ToString().Substring(len - 2, 2).Equals("ci") ||
+                 current.ToString().Substring(len - 2, 2).Equals("ce") ||
+                 current.ToString().Substring(len - 2, 2).Equals("\u010di") ||      //-či
+                 current.ToString().Substring(len - 2, 2).Equals("\u010de"))
+            {   //-če
+
+                current = StringBufferReplace(len - 2, len, current, "k");
+                return;
+            }
+            if (current.ToString().Substring(len - 2, 2).Equals("zi") ||
+                 current.ToString().Substring(len - 2, 2).Equals("ze") ||
+                 current.ToString().Substring(len - 2, 2).Equals("\u017ei") ||    //-ži
+                 current.ToString().Substring(len - 2, 2).Equals("\u017ee"))
+            {  //-že
+
+                current = StringBufferReplace(len - 2, len, current, "h");
+                return;
+            }
+            if (current.ToString().Substring(len - 3, 3).Equals("\u010dt\u011b") ||     //-čtě
+                 current.ToString().Substring(len - 3, 3).Equals("\u010dti") ||   //-čti
+                 current.ToString().Substring(len - 3, 3).Equals("\u010dt\u00ed"))
+            {   //-čtí
+
+                current = StringBufferReplace(len - 3, len, current, "ck");
+                return;
+            }
+            if (current.ToString().Substring(len - 2, 2).Equals("\u0161t\u011b") ||   //-ště
+                current.ToString().Substring(len - 2, 2).Equals("\u0161ti") ||   //-šti
+                 current.ToString().Substring(len - 2, 2).Equals("\u0161t\u00ed"))
+            {  //-ští
+
+                current = StringBufferReplace(len - 2, len, current, "sk");
+                return;
+            }
+            current = current.Remove(len - 1, 1);
+            return;
+        }//palatalise
+
+        protected void removePossessives()
+        {
+            int len = current.Length;
+
+            if (len > 5)
+            {
+                if (current.ToString().Substring(len - 2, 2).Equals("ov"))
+                {
+                    current = current.Remove(len - 2, 2);
+                    return;
+                }
+                if (current.ToString().Substring(len - 2, 2).Equals("\u016fv"))
+                { //-ův
+                    current = current.Remove(len - 2, 2);
+                    return;
+                }
+                if (current.ToString().Substring(len - 2, 2).Equals("in"))
+                {
+                    current = current.Remove(len - 1, 1);
+                    palatalise();
+                    return;
+                }
+            }
+        }//removePossessives
+
+        protected void removeCase()
+        {
+            int len = current.Length;
+            // 
+            if ((len > 7) &&
+                 current.ToString().Substring(len - 5, 5).Equals("atech"))
+            {
+                current = current.Remove(len - 5, 5);
+                return;
+            }//len>7
+            if (len > 6)
+            {
+                if (current.ToString().Substring(len - 4, 4).Equals("\u011btem"))
+                {   //-ětem
+
+                    current = current.Remove(len - 3, 3);
+                    palatalise();
+                    return;
+                }
+                if (current.ToString().Substring(len - 4, 4).Equals("at\u016fm"))
+                {  //-atům
+                    current = current.Remove(len - 4, 4);
+                    return;
+                }
+            }
+            if (len > 5)
+            {
+                if (current.ToString().Substring(len - 3, 3).Equals("ech") ||
+                      current.ToString().Substring(len - 3, 3).Equals("ich") ||
+              current.ToString().Substring(len - 3, 3).Equals("\u00edch"))
+                { //-ích
+
+                    current = current.Remove(len - 2, 2);
+                    palatalise();
+                    return;
+                }
+                if (current.ToString().Substring(len - 3, 3).Equals("\u00e9ho") || //-ého
+                    current.ToString().Substring(len - 3, 3).Equals("\u011bmi") ||  //-ěmu
+                    current.ToString().Substring(len - 3, 3).Equals("emi") ||
+                    current.ToString().Substring(len - 3, 3).Equals("\u00e9mu") ||  // -ému				                                                                current.substring( len-3,len).equals("ete")||
+                    current.ToString().Substring(len - 3, 3).Equals("eti") ||
+                    current.ToString().Substring(len - 3, 3).Equals("iho") ||
+                    current.ToString().Substring(len - 3, 3).Equals("\u00edho") ||  //-ího
+                    current.ToString().Substring(len - 3, 3).Equals("\u00edmi") ||  //-ími
+                    current.ToString().Substring(len - 3, 3).Equals("imu"))
+                {
+
+                    current = current.Remove(len - 2, 2);
+                    palatalise();
+                    return;
+                }
+                if (current.ToString().Substring(len - 3, 3).Equals("\u00e1ch") || //-ách
+                    current.ToString().Substring(len - 3, 3).Equals("ata") ||
+                    current.ToString().Substring(len - 3, 3).Equals("aty") ||
+                    current.ToString().Substring(len - 3, 3).Equals("\u00fdch") ||   //-ých
+                    current.ToString().Substring(len - 3, 3).Equals("ama") ||
+                    current.ToString().Substring(len - 3, 3).Equals("ami") ||
+                    current.ToString().Substring(len - 3, 3).Equals("ov\u00e9") ||   //-ové
+                    current.ToString().Substring(len - 3, 3).Equals("ovi") ||
+                    current.ToString().Substring(len - 3, 3).Equals("\u00fdmi"))
+                {  //-ými
+
+                    current = current.Remove(len - 3, 3);
+                    return;
+                }
+            }
+            if (len > 4)
+            {
+                if (current.ToString().Substring(len - 2, 2).Equals("em"))
+                {
+
+                    current = current.Remove(len - 1, 1);
+                    palatalise();
+                    return;
+
+                }
+                if (current.ToString().Substring(len - 2, 2).Equals("es") ||
+                    current.ToString().Substring(len - 2, 2).Equals("\u00e9m") ||    //-ém
+                    current.ToString().Substring(len - 2, 2).Equals("\u00edm"))
+                {   //-ím
+
+                    current = current.Remove(len - 2, 2);
+                    palatalise();
+                    return;
+                }
+                if (current.ToString().Substring(len - 2, 2).Equals("\u016fm"))
+                {
+
+                    current = current.Remove(len - 2, 2);
+                    return;
+                }
+                if (current.ToString().Substring(len - 2, 2).Equals("at") ||
+                    current.ToString().Substring(len - 2, 2).Equals("\u00e1m") ||    //-ám
+                    current.ToString().Substring(len - 2, 2).Equals("os") ||
+                    current.ToString().Substring(len - 2, 2).Equals("us") ||
+                    current.ToString().Substring(len - 2, 2).Equals("\u00fdm") ||     //-ým
+                    current.ToString().Substring(len - 2, 2).Equals("mi") ||
+                    current.ToString().Substring(len - 2, 2).Equals("ou"))
+                {
+
+                    current = current.Remove(len - 2, 2);
+                    return;
+                }
+            }//len>4
+            if (len > 3)
+            {
+                if (current.ToString().Substring(len - 1, 1).Equals("e") ||
+                   current.ToString().Substring(len - 1, 1).Equals("i"))
+                {
+
+                    palatalise();
+                    return;
+                }
+                if (current.ToString().Substring(len - 1, 1).Equals("\u00ed") ||    //-é
+                    current.ToString().Substring(len - 1, 1).Equals("\u011b"))
+                {   //-ě
+
+                    palatalise();
+                    return;
+                }
+                if (current.ToString().Substring(len - 1, 1).Equals("u") ||
+                    current.ToString().Substring(len - 1, 1).Equals("y") ||
+                    current.ToString().Substring(len - 1, 1).Equals("\u016f"))
+                {   //-ů
+
+                    current = current.Remove(len - 1, 1);
+                    return;
+                }
+                if (current.ToString().Substring(len - 1, 1).Equals("a") ||
+                    current.ToString().Substring(len - 1, 1).Equals("o") ||
+                    current.ToString().Substring(len - 1, 1).Equals("\u00e1") ||  // -á
+                    current.ToString().Substring(len - 1, 1).Equals("\u00e9") ||  //-é
+                    current.ToString().Substring(len - 1, 1).Equals("\u00fd"))
+                {   //-ý
+
+                    current = current.Remove(len - 1, 1);
+                    return;
+                }
+            }//len>3
         }
     }
+
 }
