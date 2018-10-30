@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Verbarium.DAL.Interfaces;
 
 namespace Verbarium.DAL.Models
@@ -13,6 +14,11 @@ namespace Verbarium.DAL.Models
         public string Name { get; set; }
 
         public string Description { get; set; }
+
+        [ForeignKey("ParentClassifier")]
+        public int? ParentId { get; set; }
+
+        public virtual Classifier ParentClassifier { get; set; }
 
         public virtual List<Classifier> Classifiers { get; set; }
 

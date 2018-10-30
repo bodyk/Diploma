@@ -37,7 +37,14 @@ namespace Verbarium.BLL.Desktop.Services
 
         public bool AddClassifier(string name, int parentId, ref int classifierId, string description = "")
         {
-            throw new System.NotImplementedException();
+            classifierId = Create(new ClassifierDto
+            {
+                Name = name,
+                Description = description,
+                ParentId = parentId == (-1) ? (int?) null : parentId
+            }).Id;
+
+            return true;
         }
 
         public bool AddWord(int wordId, List<ClassifierDto> classifiers)

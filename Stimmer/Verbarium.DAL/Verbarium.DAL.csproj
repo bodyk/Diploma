@@ -83,6 +83,10 @@
     <Compile Include="Migrations\201810300440502_Quote-NewField.Designer.cs">
       <DependentUpon>201810300440502_Quote-NewField.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201810300623552_AddParentIdToClassifier.cs" />
+    <Compile Include="Migrations\201810300623552_AddParentIdToClassifier.Designer.cs">
+      <DependentUpon>201810300623552_AddParentIdToClassifier.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Classifier.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -108,6 +112,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201810300440502_Quote-NewField.resx">
       <DependentUpon>201810300440502_Quote-NewField.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810300623552_AddParentIdToClassifier.resx">
+      <DependentUpon>201810300623552_AddParentIdToClassifier.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -13,7 +13,7 @@ namespace Verbarium.BLL.Services
     public class ClassifierServiceCrud 
         : BaseServiceCrud<Classifier, ClassifierDto>, IClassifierServiceCrud
     {
-        public ClassifierServiceCrud(IUnitOfWork unitOfWork) : base(unitOfWork)
+        public ClassifierServiceCrud(IUnitOfWork unitOfWork) : base(unitOfWork, "Classifiers")
         {
         }
 

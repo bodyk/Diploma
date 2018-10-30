@@ -17,6 +17,7 @@ namespace Verbarium.BLL.Extensions.Mapper
                 Id = entity.Id,
                 Name = entity.Name,
                 Description = entity.Description,
+                ParentId = entity.ParentId,
                 Classifiers = entity.Classifiers?.Select(e => e.ToDto()).ToList()
             };
         }
@@ -28,7 +29,8 @@ namespace Verbarium.BLL.Extensions.Mapper
                 Id = dto.Id,
                 Name = dto.Name,
                 Description = dto.Description,
-                Classifiers = dto.Classifiers?.Select(e => e.ToEntity()).ToList()
+                Classifiers = dto.Classifiers?.Select(e => e.ToEntity()).ToList(),
+                ParentId = dto.ParentId
             };
         }
     }

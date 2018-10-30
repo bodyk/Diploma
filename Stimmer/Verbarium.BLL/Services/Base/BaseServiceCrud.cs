@@ -13,10 +13,12 @@ namespace Verbarium.BLL.Services.Base
     {
         protected readonly IUnitOfWork UnitOfWork;
         protected readonly IGenericRepository<T> Repository;
+        protected readonly string TableName;
 
-        protected BaseServiceCrud(IUnitOfWork unitOfWork)
+        protected BaseServiceCrud(IUnitOfWork unitOfWork, string tableName)
         {
             UnitOfWork = unitOfWork;
+            TableName = tableName;
             Repository = UnitOfWork.GetRepository<T>();
         }
 

@@ -11,7 +11,7 @@ namespace Verbarium.BLL.Services
 {
     public class QuoteServiceCrud : BaseServiceCrud<Quote, QuoteDto>, IQuoteServiceCrud
     {
-        public QuoteServiceCrud(IUnitOfWork unitOfWork) : base(unitOfWork)
+        public QuoteServiceCrud(IUnitOfWork unitOfWork) : base(unitOfWork, "Quotes")
         {
         }
 

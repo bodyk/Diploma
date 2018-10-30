@@ -11,7 +11,7 @@ namespace Verbarium.BLL.Services
 {
     public class WordServiceCrud : BaseServiceCrud<Word, WordDto>, IWordServiceCrud
     {
-        public WordServiceCrud(IUnitOfWork unitOfWork) : base(unitOfWork)
+        public WordServiceCrud(IUnitOfWork unitOfWork) : base(unitOfWork, "Words")
         {
         }
 
