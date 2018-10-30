@@ -19,5 +19,6 @@ namespace Verbarium.BLL.Interfaces
         Task<TDto> UpdateAsync(TDto dto);
 
         int Count { get; }
+        void ExecuteDirectly(string query);
     }
 }

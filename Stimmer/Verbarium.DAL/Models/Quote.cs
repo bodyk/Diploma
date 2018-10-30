@@ -12,5 +12,6 @@ namespace Verbarium.DAL.Models
         public string Content { get; set; }
 
         public Word CurrentWord { get; set; }
+        public string Author { get; set; }
     }
 }

@@ -3,7 +3,7 @@ using Verbarium.BLL.DTOs;
 
 namespace Verbarium.BLL.Interfaces
 {
-    public interface IWordServiceCrud
+    public interface IWordServiceCrud : IGenericService<WordDto>
     {
     }
 }

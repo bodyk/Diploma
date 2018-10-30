@@ -48,7 +48,7 @@
     <Compile Include="DTOs\QuoteDto.cs" />
     <Compile Include="DTOs\WordDto.cs" />
     <Compile Include="Extensions\Mapper\ClassifierMapper.cs" />
-    <Compile Include="Extensions\Mapper\QuoteMapper.cs" />
+    <Compile Include="Extensions\Mapper\QuoteMapperDto.cs" />
     <Compile Include="Extensions\Mapper\WordMapper.cs" />
     <Compile Include="Infrastructure\BllCommonModule.cs" />
     <Compile Include="Interfaces\IClassifierServiceCrud.cs" />

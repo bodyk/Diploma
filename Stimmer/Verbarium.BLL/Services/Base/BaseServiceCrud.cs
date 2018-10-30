@@ -22,6 +22,11 @@ namespace Verbarium.BLL.Services.Base
 
         public int Count => Repository.Query.Count();
 
+        public void ExecuteDirectly(string query)
+        {
+            UnitOfWork.ExecuteDirectly(query);
+        }
+
         protected virtual TDto EagerGet(int id)
         {
             return GetById(id);

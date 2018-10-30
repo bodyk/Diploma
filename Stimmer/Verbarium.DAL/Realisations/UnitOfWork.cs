@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Entity.Validation;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Verbarium.DAL.Context;
 using Verbarium.DAL.Exceptions;
 using Verbarium.DAL.Interfaces;
 
 namespace Verbarium.DAL.Realisations
 {
-    internal class UnitOfWork : IUnitOfWork
+    public class UnitOfWork : IUnitOfWork
     {
         private readonly VerbariumContext _context;
         private readonly IRepositoryFactory _factory;
@@ -70,6 +66,11 @@ namespace Verbarium.DAL.Realisations
         public IGenericRepository<T> GetRepository<T>() where T : class
         {
             return _factory.CreateRepository<T>(_context);
+        }
+
+        public void ExecuteDirectly(string query)
+        {
+            _context.Database.ExecuteSqlCommand(query);
         }
     }
 }

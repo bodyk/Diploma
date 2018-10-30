@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Verbarium.BLL.DTOs;
+﻿using Verbarium.BLL.DTOs;
 using Verbarium.DAL.Models;
 
 namespace Verbarium.BLL.Extensions.Mapper
 {
-    public static class QuoteMapper
+    public static class QuoteMapperDto
     {
         public static QuoteDto ToDto(this Quote entity)
         {
@@ -16,7 +11,8 @@ namespace Verbarium.BLL.Extensions.Mapper
             {
                 Id = entity.Id,
                 Content = entity.Content,
-                CurrentWord = entity.CurrentWord.ToDto()
+                CurrentWord = entity.CurrentWord.ToDto(),
+                Author = entity.Author
             };
         }
 
@@ -26,7 +22,8 @@ namespace Verbarium.BLL.Extensions.Mapper
             {
                 Id = dto.Id,
                 Content = dto.Content,
-                CurrentWord = dto.CurrentWord.ToEntity()
+                CurrentWord = dto.CurrentWord.ToEntity(),
+                Author = dto.Author
             };
         }
     }

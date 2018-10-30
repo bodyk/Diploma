@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using Ninject;
 using Verbarium.BLL.Desktop.Interfaces;
 using Verbarium.BLL.DTOs;
 using Verbarium.BLL.Services;
+using Verbarium.DAL.Infrastructure;
 using Verbarium.DAL.Interfaces;
 
 namespace Verbarium.BLL.Desktop.Services
@@ -30,6 +32,11 @@ namespace Verbarium.BLL.Desktop.Services
 
         public QuoteService(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
+        }
+
+        public QuoteService() : base(new StandardKernel(new DataAccessModule()).Get<IUnitOfWork>())
+        {
+            
         }
     }
 }

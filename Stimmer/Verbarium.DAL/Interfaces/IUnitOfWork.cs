@@ -10,5 +10,7 @@ namespace Verbarium.DAL.Interfaces
         void Save();
         
         IGenericRepository<T> GetRepository<T>() where T : class;
+
+        void ExecuteDirectly(string query);
     }
 }

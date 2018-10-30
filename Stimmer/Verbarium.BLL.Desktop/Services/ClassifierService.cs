@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using Ninject;
+using System.Collections.Generic;
 using Verbarium.BLL.Desktop.Interfaces;
 using Verbarium.BLL.DTOs;
 using Verbarium.BLL.Services;
+using Verbarium.DAL.Infrastructure;
 using Verbarium.DAL.Interfaces;
 
 namespace Verbarium.BLL.Desktop.Services
@@ -18,6 +20,21 @@ namespace Verbarium.BLL.Desktop.Services
             throw new System.NotImplementedException();
         }
 
+        public List<WordDto> GetClassifStartsWith(string startPart)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public List<ClassifierDto> GetPathToClassifier(int parentId = -1)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public int GetParentId(int classifId)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public bool AddClassifier(string name, int parentId, ref int classifierId, string description = "")
         {
             throw new System.NotImplementedException();
@@ -29,6 +46,11 @@ namespace Verbarium.BLL.Desktop.Services
         }
 
         public bool DeleteWordFromClassifier(int wordId, int classifierId)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public bool DeleteWordFromClassifier(int wordId, ClassifierDto dto)
         {
             throw new System.NotImplementedException();
         }
@@ -49,6 +71,10 @@ namespace Verbarium.BLL.Desktop.Services
         }
 
         public ClassifierService(IUnitOfWork unitOfWork) : base(unitOfWork)
+        {
+        }
+
+        public ClassifierService() : base(new StandardKernel(new DataAccessModule()).Get<IUnitOfWork>())
         {
         }
     }

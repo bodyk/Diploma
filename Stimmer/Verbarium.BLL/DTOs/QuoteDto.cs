@@ -9,5 +9,6 @@ namespace Verbarium.BLL.DTOs
         public string Content { get; set; }
 
         public WordDto CurrentWord { get; set; }
+        public string Author { get; set; }
     }
 }
