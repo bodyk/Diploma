@@ -13,18 +13,16 @@ namespace Verbarium.BLL.Desktop.Interfaces
         List<WordDto> GetWordStartsWith(string startPart);
         List<ClassifierDto> GetWordClassifiers(int wordId, bool isMerge = true);
         List<ClassifierDto> GetWordParents(int wordId, bool isMerge = true);
-        bool IsWordInClassifier(int wordId, int classifiersId);
         void SetCountLastWords(int count);
 
         int GetParentId(int classifierId);
         bool IsWordExists(string word);
         bool AddWord(string word, List<ClassifierDto> parents, ref int wordId);
+        bool AddQuote(int wordId, int classifierId, string quote, string author = null);
         void AddLastWord(int wordId);
         void ClearLastWords();
         bool UpdateWord(int wordId, string newWord);
         bool DeleteWord(int wordId);
         void DeleteAllWords();
-        void ExecuteDirectly(string query);
-
     }
 }

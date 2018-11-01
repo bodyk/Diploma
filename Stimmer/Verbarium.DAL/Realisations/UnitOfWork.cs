@@ -8,12 +8,12 @@ namespace Verbarium.DAL.Realisations
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly VerbariumContext _context;
+        public VerbariumContext Context { get; set; }
         private readonly IRepositoryFactory _factory;
 
         public UnitOfWork(VerbariumContext context, IRepositoryFactory factory)
         {
-            _context = context;
+            Context = context;
             _factory = factory;
         }
 
@@ -31,7 +31,7 @@ namespace Verbarium.DAL.Realisations
             {
                 if (disposing)
                 {
-                    _context.Dispose();
+                    Context.Dispose();
                 }
                 _disposed = true;
             }
@@ -41,7 +41,7 @@ namespace Verbarium.DAL.Realisations
         {
             try
             {
-                await _context.SaveChangesAsync();
+                await Context.SaveChangesAsync();
             }
             catch (DbEntityValidationException e)
             {
@@ -54,7 +54,7 @@ namespace Verbarium.DAL.Realisations
         {
             try
             {
-                _context.SaveChanges();
+                Context.SaveChanges();
             }
             catch (DbEntityValidationException e)
             {
@@ -65,12 +65,12 @@ namespace Verbarium.DAL.Realisations
 
         public IGenericRepository<T> GetRepository<T>() where T : class
         {
-            return _factory.CreateRepository<T>(_context);
+            return _factory.CreateRepository<T>(Context);
         }
 
         public void ExecuteDirectly(string query)
         {
-            _context.Database.ExecuteSqlCommand(query);
+            Context.Database.ExecuteSqlCommand(query);
         }
     }
 }

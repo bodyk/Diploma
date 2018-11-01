@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Verbarium.DAL.Context;
 
 namespace Verbarium.DAL.Interfaces
 {
@@ -12,5 +13,7 @@ namespace Verbarium.DAL.Interfaces
         IGenericRepository<T> GetRepository<T>() where T : class;
 
         void ExecuteDirectly(string query);
+
+        VerbariumContext Context { get; set; }
     }
 }

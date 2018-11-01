@@ -6,8 +6,7 @@ namespace Verbarium.BLL.Desktop.Interfaces
 {
     public interface IQuoteService : IQuoteServiceCrud
     {
-        bool AddQuote(int wordId, int classifierId, string quote, string author = null);
-        List<QuoteDto> GetAllQuotes(int wordId, int classifierId = -1);
+        List<QuoteDto> GetAllQuotes(int wordId, int? classifierId);
         int GetCountWordQuotes(int wordId, int classifierId);
         bool DeleteQuote(int quoteId);
     }

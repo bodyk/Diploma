@@ -1,7 +1,9 @@
 ﻿using Ninject;
 using System.Collections.Generic;
+using System.Linq;
 using Verbarium.BLL.Desktop.Interfaces;
 using Verbarium.BLL.DTOs;
+using Verbarium.BLL.Extensions.Mapper;
 using Verbarium.BLL.Services;
 using Verbarium.DAL.Infrastructure;
 using Verbarium.DAL.Interfaces;
@@ -10,14 +12,20 @@ namespace Verbarium.BLL.Desktop.Services
 {
     public class ClassifierService : ClassifierServiceCrud, IClassifierService
     {
-        public List<ClassifierDto> GetAllClassifiers(int rootId = -1)
+        public List<ClassifierDto> GetAllClassifiers(int? rootId)
         {
-            throw new System.NotImplementedException();
+            return Repository.Query
+                .Where(cl => cl.Id == rootId)
+                .Select(cl => cl.ToDto())
+                .ToList();
         }
 
         public List<ClassifierDto> GetRootClassifiers()
         {
-            throw new System.NotImplementedException();
+            return Repository.Entities
+                .Where(cl => cl.ParentId == null)
+                .Select(cl => cl.ToDto())
+                .ToList();
         }
 
         public List<WordDto> GetClassifStartsWith(string startPart)
@@ -32,7 +40,10 @@ namespace Verbarium.BLL.Desktop.Services
 
         public int GetParentId(int classifId)
         {
-            throw new System.NotImplementedException();
+            return Repository.Entities
+                .Where(cl => cl.ParentId == classifId)
+                .Select(cl => cl.ParentId)
+                .FirstOrDefault() ?? -1;
         }
 
         public bool AddClassifier(string name, int parentId, ref int classifierId, string description = "")
@@ -52,29 +63,42 @@ namespace Verbarium.BLL.Desktop.Services
             throw new System.NotImplementedException();
         }
 
+        public bool IsWordInClassifier(int wordId, int classifiersId)
+        {
+            return Repository.Query.FirstOrDefault(cl => cl.Id == classifiersId)?.Words.Any(w => w.Id == wordId) ?? false;
+        }
+
         public bool DeleteWordFromClassifier(int wordId, int classifierId)
         {
-            throw new System.NotImplementedException();
+            Repository.Entities.FirstOrDefault(cl => cl.Id == classifierId)?.Words.RemoveAll(w => w.Id == wordId);
+            return true;
         }
 
         public bool DeleteWordFromClassifier(int wordId, ClassifierDto dto)
         {
-            throw new System.NotImplementedException();
+            return DeleteWordFromClassifier(wordId, dto.Id);
         }
 
         public bool NormalizeClassifiers()
         {
-            throw new System.NotImplementedException();
+            foreach (var classifier in Repository.Query.Where(cl => cl.ParentId == null && cl.Words.Count == 0))
+            {
+                Delete(classifier.Id);
+            }
+            return true;
         }
 
         public bool DeleteClassifier(int classifierId)
         {
-            throw new System.NotImplementedException();
+            Delete(classifierId);
+            return true;
         }
 
         public void DeleteAllClassifiers()
         {
-            throw new System.NotImplementedException();
+            foreach (var entity in UnitOfWork.Context.Classifiers)
+                UnitOfWork.Context.Classifiers.Remove(entity);
+            UnitOfWork.Context.SaveChanges();
         }
 
         public ClassifierService(IUnitOfWork unitOfWork) : base(unitOfWork)

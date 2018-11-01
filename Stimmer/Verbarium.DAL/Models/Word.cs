@@ -15,7 +15,7 @@ namespace Verbarium.DAL.Models
         
         public string Description { get; set; }
 
-        public DateTime CreationTime { get; set; }
+        public DateTime CreationTime { get; set; } = DateTime.Now;
         
         public virtual List<Quote> Quotes { get; set; }
 
