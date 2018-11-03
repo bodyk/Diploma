@@ -8,6 +8,7 @@ namespace Verbarium.DAL.Interfaces
     public interface IGenericRepository<T> where T : class
     {
         Task<IEnumerable<T>> GetAllAsync();
+        IEnumerable<T> GetAll();
         Task<T> GetByIdAsync(int id);
         T Create(T item);
         void Update(T item);

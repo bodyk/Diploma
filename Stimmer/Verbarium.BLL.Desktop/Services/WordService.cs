@@ -16,9 +16,10 @@ namespace Verbarium.BLL.Desktop.Services
     {
         private int _maxCountLastWords = 30;
 
-        public List<WordDto> FindWords(List<int> classifiersIds, string searchCondition)
+        public List<WordDto> FindWords(List<int> classifiersIds)
         {
-            throw new System.NotImplementedException();
+            return UnitOfWork.Context.Classifiers.Where(cl => classifiersIds.Contains(cl.Id)).ToList()
+                .SelectMany(cl => cl.Words.ToWordDtoList()).ToList();
         }
 
         public List<WordDto> GetLastWords()
@@ -42,17 +43,7 @@ namespace Verbarium.BLL.Desktop.Services
 
         public List<WordDto> GetWordStartsWith(string startPart)
         {
-            return Repository.Entities.Where(w => w.Name.StartsWith(startPart, true, CultureInfo.InvariantCulture)).ToList().ToWordDtoList();
-        }
-
-        public List<ClassifierDto> GetWordClassifiers(int wordId, bool bMerge = true)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public List<ClassifierDto> GetWordParents(int wordId, bool isMerge = true)
-        {
-            throw new System.NotImplementedException();
+            return Repository.Entities.Where(w => w.Name.ToLower().StartsWith(startPart)).ToList().ToWordDtoList();
         }
 
         public void SetCountLastWords(int count)

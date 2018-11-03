@@ -83,9 +83,7 @@ namespace Verbarium.BLL.Services.Base
 
         public IEnumerable<TDto> GetAll()
         {
-            var entities = Repository.GetAllAsync();
-
-            return ConvertToDtos(entities.Result);
+            return ConvertToDtos(Repository.GetAll());
         }
 
         public async Task<IEnumerable<TDto>> GetAllAsync()

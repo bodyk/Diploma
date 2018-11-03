@@ -12,7 +12,7 @@ namespace Verbarium.BLL.DTOs
         
         public string Description { get; set; }
 
-        public DateTime CreationTime { get; set; }
+        public DateTime? CreationTime { get; set; }
         
         public virtual List<QuoteDto> Quotes { get; set; }
 

@@ -8,12 +8,11 @@ namespace Verbarium.BLL.Desktop.Interfaces
     {
         List<ClassifierDto> GetAllClassifiers(int? rootId);
         List<ClassifierDto> GetRootClassifiers();
-        List<WordDto> GetClassifStartsWith(string startPart);
-        List<ClassifierDto> GetPathToClassifier(int parentId = -1);
         int GetParentId(int classifId);
 
         bool AddClassifier(string name, int parentId, ref int classifierId, string description = "");
         bool AddWord(int wordId, List<ClassifierDto> classifiers);
+        List<ClassifierDto> GetWordParents(int wordId, bool isMerge = true);
         bool IsWordInClassifier(int wordId, int classifiersId);
 
         bool DeleteWordFromClassifier(int wordId, int classifierId);

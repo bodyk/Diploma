@@ -26,7 +26,6 @@ namespace Verbarium.BLL.Extensions.Mapper
                 Id = dto.Id,
                 Name = dto.Name,
                 Description = dto.Description,
-                CreationTime = dto.CreationTime,
                 Classifiers = dto.Classifiers?.Select(e => e.ToEntity()).ToList(),
                 Quotes = dto.Quotes?.Select(e => e.ToEntity()).ToList()
             };

@@ -25,6 +25,11 @@ namespace Verbarium.DAL.Realisations
             return await Entities.ToListAsync();
         }
 
+        public IEnumerable<T> GetAll()
+        {
+            return Entities.ToList();
+        }
+
         public Task<T> GetByIdAsync(int id)
         {
             return Entities.SingleOrDefaultAsync(i => i.Id == id);

@@ -6,13 +6,11 @@ namespace Verbarium.BLL.Desktop.Interfaces
 {
     public interface IWordService : IWordServiceCrud
     {
-        List<WordDto> FindWords(List<int> classifiersIds, string searchCondition);
+        List<WordDto> FindWords(List<int> classifiersIds);
         List<WordDto> GetLastWords();
         WordDto GetWord(int wordId);
         List<WordDto> GetAllWords();
         List<WordDto> GetWordStartsWith(string startPart);
-        List<ClassifierDto> GetWordClassifiers(int wordId, bool isMerge = true);
-        List<ClassifierDto> GetWordParents(int wordId, bool isMerge = true);
         void SetCountLastWords(int count);
 
         int GetParentId(int classifierId);

@@ -1,5 +1,6 @@
 ﻿using Ninject;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using Verbarium.BLL.Desktop.Interfaces;
 using Verbarium.BLL.DTOs;
@@ -7,6 +8,7 @@ using Verbarium.BLL.Extensions.Mapper;
 using Verbarium.BLL.Services;
 using Verbarium.DAL.Infrastructure;
 using Verbarium.DAL.Interfaces;
+using Verbarium.DAL.Models;
 
 namespace Verbarium.BLL.Desktop.Services
 {
@@ -15,27 +17,15 @@ namespace Verbarium.BLL.Desktop.Services
         public List<ClassifierDto> GetAllClassifiers(int? rootId)
         {
             return Repository.Query
-                .Where(cl => cl.Id == rootId)
+                .Where(cl => cl.ParentId == rootId)
+                .ToList()
                 .Select(cl => cl.ToDto())
                 .ToList();
         }
 
         public List<ClassifierDto> GetRootClassifiers()
         {
-            return Repository.Entities
-                .Where(cl => cl.ParentId == null)
-                .Select(cl => cl.ToDto())
-                .ToList();
-        }
-
-        public List<WordDto> GetClassifStartsWith(string startPart)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public List<ClassifierDto> GetPathToClassifier(int parentId = -1)
-        {
-            throw new System.NotImplementedException();
+            return GetAllClassifiers(null);
         }
 
         public int GetParentId(int classifId)
@@ -60,7 +50,24 @@ namespace Verbarium.BLL.Desktop.Services
 
         public bool AddWord(int wordId, List<ClassifierDto> classifiers)
         {
-            throw new System.NotImplementedException();
+            foreach (var classifierDto in classifiers)
+            {
+                Repository.Query
+                    .Where(cl => cl.Id == classifierDto.Id)
+                    .ForEachAsync(cl => cl.Words.Add(UnitOfWork.Context.Words.FirstOrDefault(w => w.Id == wordId)));
+            }
+
+            return true;
+        }
+
+        public List<ClassifierDto> GetWordParents(int wordId, bool isMerge = true)
+        {
+
+            return Repository.Query
+                .Where(cl => cl.Words.Any(w => w.Id == wordId))
+                .ToList()
+                .Select(cl => cl.ToDto())
+                .ToList();
         }
 
         public bool IsWordInClassifier(int wordId, int classifiersId)

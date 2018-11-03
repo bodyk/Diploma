@@ -87,6 +87,14 @@
     <Compile Include="Migrations\201810300623552_AddParentIdToClassifier.Designer.cs">
       <DependentUpon>201810300623552_AddParentIdToClassifier.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201811030635397_CreationDate-Computed.cs" />
+    <Compile Include="Migrations\201811030635397_CreationDate-Computed.Designer.cs">
+      <DependentUpon>201811030635397_CreationDate-Computed.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201811030644255_CreationDate-Computed-Fixed.cs" />
+    <Compile Include="Migrations\201811030644255_CreationDate-Computed-Fixed.Designer.cs">
+      <DependentUpon>201811030644255_CreationDate-Computed-Fixed.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Classifier.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -115,6 +123,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201810300623552_AddParentIdToClassifier.resx">
       <DependentUpon>201810300623552_AddParentIdToClassifier.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201811030635397_CreationDate-Computed.resx">
+      <DependentUpon>201811030635397_CreationDate-Computed.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201811030644255_CreationDate-Computed-Fixed.resx">
+      <DependentUpon>201811030644255_CreationDate-Computed-Fixed.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
