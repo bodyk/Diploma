@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Threading.Tasks;
 using Verbarium.DAL.Interfaces;
@@ -51,8 +52,8 @@ namespace Verbarium.DAL.Realisations
             {
                 throw new ArgumentNullException(nameof(item));
             }
-
-            _context.Entry(item).State = EntityState.Modified;
+            
+            Entities.AddOrUpdate(item);
         }
 
         public void Delete(int id)

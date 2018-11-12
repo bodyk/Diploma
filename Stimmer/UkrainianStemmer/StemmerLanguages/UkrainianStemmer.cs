@@ -1,13 +1,87 @@
-﻿using System;
+﻿using Ninject;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using UkrainianStemmer.Interfaces;
 using UkrainianStemmer.Services;
+using Verbarium.BLL.DTOs;
+using Verbarium.BLL.Infrastructure;
+using Verbarium.BLL.Interfaces;
 
 namespace UkrainianStemmer.StemmerLanguages
 {
     public class UkrainianStemmer : StemmerOperations, IStemmer
     {
         static long serialVersionUID = 2016072500L;
+        private readonly IWordServiceCrud _wordService;
+        private readonly IClassifierServiceCrud _classifierService;
+        private readonly IQuoteServiceCrud _quoteService;
+
+        private static string sMorphOznaka = "Морфологічна";
+        private static string sVerb = "Дієслово";
+        private static string sNoun = "Іменник";
+        private static string sAdjective = "Прикметник";
+
+        private static string sSposibTvorenia = "Спосіб творення";
+        private static string sBezSufix = "Безсуфіксальний";
+        private static string sPrefix = "Префіксальний";
+        private static string sSufix = "Суфіксальний";
+        private static string sPrefix_sufix = "Префіксально-суфіксальний";
+
+        private ClassifierDto MorphologichnaOznaka = new ClassifierDto
+        {
+            Name = sMorphOznaka,
+            Words = new List<WordDto>(),
+            Classifiers = new List<ClassifierDto>
+            {
+                new ClassifierDto
+                {
+                    Name = sVerb,
+                    Words = new List<WordDto>()
+                },
+                new ClassifierDto
+                {
+                    Words = new List<WordDto>(),
+                    Name = sNoun
+                },
+                new ClassifierDto
+                {
+                    Words = new List<WordDto>(),
+                    Name = sAdjective
+                }
+            }
+        };
+
+        private ClassifierDto SposibTvorenia = new ClassifierDto
+        {
+            Name = sSposibTvorenia,
+            Words = new List<WordDto>(),
+            Classifiers = new List<ClassifierDto>
+            {
+                new ClassifierDto
+                {
+                    Words = new List<WordDto>(),
+                    Name = sBezSufix
+                },
+                new ClassifierDto
+                {
+                    Words = new List<WordDto>(),
+                    Name = sPrefix
+                },
+                new ClassifierDto
+                {
+                    Words = new List<WordDto>(),
+                    Name = sSufix
+                },
+                new ClassifierDto
+                {
+                    Words = new List<WordDto>(),
+                    Name = sPrefix_sufix
+                },
+            }
+        };
+
+        private readonly List<ClassifierDto> _allClassifierDtos;
 
         private readonly List<Among> a_0 = new List<Among>
         {
@@ -176,6 +250,15 @@ namespace UkrainianStemmer.StemmerLanguages
             new Among("\u044C", -1, 3)
         };
 
+        public UkrainianStemmer()
+        {
+            var standardKernel = new StandardKernel();
+            standardKernel.Load(new BllCommonModule());
+            _wordService = standardKernel.Get<IWordServiceCrud>();
+            _classifierService = standardKernel.Get<IClassifierServiceCrud>();
+            _quoteService = standardKernel.Get<IQuoteServiceCrud>();
+            _allClassifierDtos = _classifierService.GetAll().ToList();
+        }
 
 
         private bool r_exception1()
@@ -234,6 +317,8 @@ namespace UkrainianStemmer.StemmerLanguages
                     slice_del();
                     break;
             }
+
+            AddCurrentWordToClassifier(MorphologichnaOznaka, sAdjective);
             return true;
         }
 
@@ -261,6 +346,7 @@ namespace UkrainianStemmer.StemmerLanguages
                     slice_del();
                     break;
             }
+            AddCurrentWordToClassifier(SposibTvorenia, sSufix);
             return true;
         }
 
@@ -293,6 +379,7 @@ namespace UkrainianStemmer.StemmerLanguages
                     slice_del();
                     break;
             }
+            AddCurrentWordToClassifier(MorphologichnaOznaka, sVerb);
             return true;
         }
 
@@ -335,6 +422,7 @@ namespace UkrainianStemmer.StemmerLanguages
                     slice_del();
                     break;
             }
+            AddCurrentWordToClassifier(MorphologichnaOznaka, sNoun);
             return true;
         }
 
@@ -759,6 +847,28 @@ namespace UkrainianStemmer.StemmerLanguages
             
             lab0_end:
             return this.getCurrent();
+        }
+
+        private void AddCurrentWordToClassifier(ClassifierDto classif, string classifierName)
+        {
+            try
+            {
+                var curClassifier = _allClassifierDtos.First(cl => cl.Name == classifierName);
+
+                if (curClassifier != null)
+                {
+                    curClassifier.Words = curClassifier?.Words ?? new List<WordDto>();
+                    curClassifier.Words.Add(new WordDto
+                    {
+                        Name = WordToStore
+                    });
+                    _classifierService.Update(curClassifier);
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
         }
     }
 }

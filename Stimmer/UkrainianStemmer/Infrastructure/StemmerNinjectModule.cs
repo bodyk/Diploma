@@ -1,6 +1,8 @@
-﻿using Ninject.Modules;
+﻿using Ninject;
+using Ninject.Modules;
 using UkrainianStemmer.Interfaces;
 using UkrainianStemmer.Services;
+using Verbarium.BLL.Infrastructure;
 
 namespace UkrainianStemmer.Infrastructure
 {
@@ -9,6 +11,9 @@ namespace UkrainianStemmer.Infrastructure
         public override void Load()
         {
             Bind<IStemmerService>().To<StemmerService>();
+
+            var standardKernel = new StandardKernel();
+            standardKernel.Load(new BllCommonModule());
         }
     }
 }

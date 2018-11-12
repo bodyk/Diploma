@@ -31,8 +31,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Ninject, Version=3.0.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
-      <HintPath>..\packages\Portable.Ninject.3.3.1\lib\net40-client\Ninject.dll</HintPath>
+    <Reference Include="Ninject, Version=3.3.4.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ninject.3.3.4\lib\net45\Ninject.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -56,8 +56,19 @@
     <Compile Include="StemmerLanguages\UkrainianStemmer.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="Examples\ukstemmer.module" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Verbarium.BLL\Verbarium.BLL.Common.csproj">
+      <Project>{9a819f9b-15cd-47f9-baa8-f36eee0e4ae9}</Project>
+      <Name>Verbarium.BLL.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Verbarium.DAL\Verbarium.DAL.csproj">
+      <Project>{E408C9C9-2AF4-42D3-856D-838D6CD9FF5E}</Project>
+      <Name>Verbarium.DAL</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

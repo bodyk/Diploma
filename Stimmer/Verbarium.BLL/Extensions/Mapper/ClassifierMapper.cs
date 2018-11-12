@@ -30,6 +30,7 @@ namespace Verbarium.BLL.Extensions.Mapper
                 Name = dto.Name,
                 Description = dto.Description,
                 Classifiers = dto.Classifiers?.Select(e => e.ToEntity()).ToList(),
+                Words = dto.Words?.Select(e => e.ToEntity()).ToList(),
                 ParentId = dto.ParentId
             };
         }

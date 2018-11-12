@@ -16,6 +16,8 @@ namespace UkrainianStemmer.StemmerLanguages
 
         //    // current string
         protected StringBuilder current;
+
+        public string WordToStore { get; set; }
         protected int cursor;
         protected int limit;
         protected int limit_backward;
@@ -39,6 +41,7 @@ namespace UkrainianStemmer.StemmerLanguages
             //current=current.Replace(current.ToString(), value);
             //current = StringBufferReplace(0, current.Length, current, value);
             //current = StringBufferReplace(0, value.Length, current, value);
+            WordToStore = value;
             current.Remove(0, current.Length);
             current.Append(value);
             cursor = 0;

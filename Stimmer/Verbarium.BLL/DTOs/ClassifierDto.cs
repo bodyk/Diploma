@@ -13,5 +13,7 @@ namespace Verbarium.BLL.DTOs
         public int? ParentId { get; set; }
 
         public virtual List<ClassifierDto> Classifiers { get; set; }
+
+        public virtual List<WordDto> Words { get; set; }
     }
 }
