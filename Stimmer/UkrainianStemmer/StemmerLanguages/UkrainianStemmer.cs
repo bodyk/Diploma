@@ -94,6 +94,7 @@ namespace UkrainianStemmer.StemmerLanguages
             new Among("\u043A\u0440\u0456\u043C", -1, -1)
         };
 
+        //"/(ими|ій|ий|а|е|ова|ове|ів|є|їй|єє|еє|я|ім|ем|им|ім|их|іх|ою|йми|іми|у|ю|ого|ому|ої)$/"; //http://uk.wikipedia.org/wiki/Прикметник + http://wapedia.mobi/uk/Прикметник
         private readonly List<Among> a_1 = new List<Among>
         {
             new Among("\u043E\u0432\u0430", -1, 1),
